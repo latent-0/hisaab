@@ -27,6 +27,19 @@ export interface AnswerResult {
   answerText: string;
 }
 
+export interface ExplainNoticeInput {
+  notice: string;
+  language: string;
+}
+
+export interface NoticeExplanation {
+  title: string;
+  summary: string;
+  severity: "low" | "medium" | "high";
+  steps: string[];
+  deadlineHint?: string | null;
+}
+
 /**
  * Task-level AI engine. The "mock" implementation is a deterministic rule-based
  * engine that requires no API key. Real providers (Claude / Gemini) prompt an
@@ -38,4 +51,5 @@ export interface AiEngine {
   intake(input: IntakeInput): Promise<IntakeResult>;
   classify(input: ClassifyInput): Promise<ClassifyResult>;
   answer(input: AnswerInput): Promise<AnswerResult>;
+  explainNotice(input: ExplainNoticeInput): Promise<NoticeExplanation>;
 }

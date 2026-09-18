@@ -5,6 +5,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  ComposedChart,
   Legend,
   Line,
   LineChart,
@@ -69,6 +70,30 @@ export function TrendChart({
         <Line type="monotone" dataKey="itc" name="ITC claimed" stroke="#0f9d58" strokeWidth={2.5} dot={{ r: 3 }} />
         <Line type="monotone" dataKey="net" name="Net payable" stroke="#e8a11a" strokeWidth={2.5} dot={{ r: 3 }} />
       </LineChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function ProfitTrendChart({
+  data,
+}: {
+  data: Array<{ label: string; revenue: number; cost: number; profit: number }>;
+}) {
+  return (
+    <ResponsiveContainer width="100%" height={240}>
+      <ComposedChart data={data} margin={{ top: 8, right: 8, left: -8, bottom: 0 }} barGap={2}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#eef2f8" vertical={false} />
+        <XAxis dataKey="label" tick={{ fontSize: 12, fill: AXIS }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fontSize: 11, fill: AXIS }} axisLine={false} tickLine={false} tickFormatter={compact} />
+        <Tooltip
+          formatter={(v: number, n) => [inr(v), n === "revenue" ? "Revenue" : n === "cost" ? "Purchases" : "Est. profit"]}
+          contentStyle={{ borderRadius: 12, border: "1px solid #e5e9f2", fontSize: 12 }}
+        />
+        <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+        <Bar dataKey="revenue" name="Revenue" fill={BRAND} radius={[5, 5, 0, 0]} maxBarSize={26} />
+        <Bar dataKey="cost" name="Purchases" fill="#8ec6f2" radius={[5, 5, 0, 0]} maxBarSize={26} />
+        <Line type="monotone" dataKey="profit" name="Est. profit" stroke="#0f9d58" strokeWidth={2.5} dot={{ r: 3 }} />
+      </ComposedChart>
     </ResponsiveContainer>
   );
 }

@@ -4,13 +4,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
+  Activity,
   BarChart3,
+  Banknote,
+  CalendarClock,
   FileCheck2,
   GaugeCircle,
   LayoutDashboard,
   ListChecks,
   LogOut,
   Menu,
+  NotebookPen,
   Receipt,
   Settings,
   ShieldAlert,
@@ -20,10 +24,14 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/health", label: "Business health", icon: Activity },
   { href: "/invoices", label: "Invoices", icon: Receipt },
   { href: "/reconciliation", label: "Reconciliation", icon: GaugeCircle },
   { href: "/returns", label: "GST Returns", icon: FileCheck2 },
   { href: "/review", label: "Review queue", icon: ListChecks, badgeKey: "review" as const },
+  { href: "/khata", label: "Khata", icon: NotebookPen },
+  { href: "/credit", label: "Working capital", icon: Banknote },
+  { href: "/compliance", label: "Compliance", icon: CalendarClock },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

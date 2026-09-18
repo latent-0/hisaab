@@ -245,6 +245,72 @@ export const mockEngine: AiEngine = {
 
     return { intent, answerText };
   },
+
+  async explainNotice({ notice, language }) {
+    const t = notice.toLowerCase();
+    const hi = language === "hi";
+    let title: string;
+    let summary: string;
+    let severity: "low" | "medium" | "high" = "medium";
+    let steps: string[];
+
+    if (/drc|demand|show cause|scn|recover/.test(t)) {
+      severity = "high";
+      title = "Demand / show-cause notice";
+      summary = hi
+        ? "यह एक डिमांड/शो-कॉज नोटिस है — विभाग आपसे टैक्स या जवाब मांग रहा है। इसे नज़रअंदाज़ न करें।"
+        : "This is a demand / show-cause notice — the department is asking for tax or an explanation. Do not ignore it.";
+      steps = [
+        "Note the reply deadline on the notice (often 7–30 days).",
+        "Match the demand against your Hisaab GSTR-3B for that period.",
+        "Prepare a reply with supporting invoices; loop in a CA for a demand.",
+        "File the response on the GST portal before the due date.",
+      ];
+    } else if (/asmt-?10|scrutiny/.test(t)) {
+      title = "Scrutiny of returns (ASMT-10)";
+      summary = hi
+        ? "आपके रिटर्न में कुछ अंतर पर सवाल उठाया गया है। आपको स्पष्टीकरण देना है।"
+        : "The officer has flagged discrepancies in your returns and wants an explanation (form ASMT-11).";
+      steps = [
+        "Identify each discrepancy listed in the notice.",
+        "Cross-check with your reconciled invoices in Hisaab.",
+        "Reply in ASMT-11 with reasons and proof, or pay the shortfall.",
+      ];
+    } else if (/2b|2a|mismatch|itc|input tax/.test(t)) {
+      title = "ITC / GSTR-2B mismatch";
+      summary = hi
+        ? "आपने जो इनपुट टैक्स क्रेडिट क्लेम किया, वह सप्लायर के फाइलिंग (2B) से मेल नहीं खा रहा।"
+        : "The input tax credit you claimed doesn't match your suppliers' filings (GSTR-2B).";
+      steps = [
+        "Open Reconciliation in Hisaab to see the mismatched invoices.",
+        "Ask those suppliers to file / correct their GSTR-1.",
+        "Reverse or hold ITC that can't be matched, then reply.",
+      ];
+    } else if (/late fee|interest|not filed|gstr-3b|3b|return|gstr-1/.test(t)) {
+      title = "Late / pending return";
+      summary = hi
+        ? "एक रिटर्न देर से या फाइल नहीं हुआ है — लेट फीस/ब्याज लग सकता है।"
+        : "A return is late or unfiled; late fee and interest may apply.";
+      steps = [
+        "Open GST Returns in Hisaab — the draft is ready.",
+        "Review the flagged items, then file for the pending period.",
+        "Pay any late fee/interest shown on the portal.",
+      ];
+    } else {
+      severity = "low";
+      title = "GST notice";
+      summary = hi
+        ? "यह एक सामान्य GST सूचना लगती है। ध्यान से पढ़ें और समय पर जवाब दें।"
+        : "This looks like a routine GST communication. Read the specifics and respond in time.";
+      steps = [
+        "Note the notice type and any deadline.",
+        "Match it to the relevant period in Hisaab.",
+        "Reply on the GST portal; involve a CA if unsure.",
+      ];
+    }
+
+    return { title, summary, severity, steps, deadlineHint: null };
+  },
 };
 
 function parseDate(raw: string | null): string | null {

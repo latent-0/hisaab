@@ -6,6 +6,7 @@ import {
   ANSWER_SYSTEM,
   CLASSIFY_SYSTEM,
   INTAKE_SYSTEM,
+  NOTICE_SYSTEM,
   answerSchema,
   answerUserPrompt,
   classifySchema,
@@ -13,8 +14,10 @@ import {
   extractJson,
   intakeSchema,
   intakeUserPrompt,
+  noticeSchema,
+  noticeUserPrompt,
 } from "./prompts";
-import type { AiEngine, AnswerInput, AnswerResult, ClassifyInput, IntakeInput } from "./types";
+import type { AiEngine, AnswerInput, AnswerResult, ClassifyInput, ExplainNoticeInput, IntakeInput } from "./types";
 
 const MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
 const ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
@@ -74,6 +77,16 @@ export const groqEngine: AiEngine = {
     } catch (err) {
       console.warn("[groq.answer] falling back to mock:", (err as Error).message);
       return mockEngine.answer(input);
+    }
+  },
+
+  async explainNotice(input: ExplainNoticeInput) {
+    try {
+      const out = await callGroq(NOTICE_SYSTEM, noticeUserPrompt(input));
+      return noticeSchema.parse(extractJson(out));
+    } catch (err) {
+      console.warn("[groq.explainNotice] falling back to mock:", (err as Error).message);
+      return mockEngine.explainNotice(input);
     }
   },
 };

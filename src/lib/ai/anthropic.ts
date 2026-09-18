@@ -6,6 +6,7 @@ import {
   ANSWER_SYSTEM,
   CLASSIFY_SYSTEM,
   INTAKE_SYSTEM,
+  NOTICE_SYSTEM,
   answerSchema,
   answerUserPrompt,
   classifySchema,
@@ -13,8 +14,10 @@ import {
   extractJson,
   intakeSchema,
   intakeUserPrompt,
+  noticeSchema,
+  noticeUserPrompt,
 } from "./prompts";
-import type { AiEngine, AnswerInput, AnswerResult, ClassifyInput, IntakeInput } from "./types";
+import type { AiEngine, AnswerInput, AnswerResult, ClassifyInput, ExplainNoticeInput, IntakeInput } from "./types";
 
 const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-5";
 
@@ -72,6 +75,16 @@ export const anthropicEngine: AiEngine = {
     } catch (err) {
       console.warn("[anthropic.answer] falling back to mock:", (err as Error).message);
       return mockEngine.answer(input);
+    }
+  },
+
+  async explainNotice(input: ExplainNoticeInput) {
+    try {
+      const out = await callClaude(NOTICE_SYSTEM, noticeUserPrompt(input));
+      return noticeSchema.parse(extractJson(out));
+    } catch (err) {
+      console.warn("[anthropic.explainNotice] falling back to mock:", (err as Error).message);
+      return mockEngine.explainNotice(input);
     }
   },
 };

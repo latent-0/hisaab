@@ -291,6 +291,24 @@ async function main() {
     await processInvoice(created.id);
   }
 
+  // ---- Khata: receivables (udhaar) & payables for Sharma ----
+  const dayOffset = (n: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() + n);
+    return d;
+  };
+  await prisma.ledgerEntry.createMany({
+    data: [
+      { merchantId: sharma.id, party: "Ramesh Yadav", phone: "9811100011", kind: "receivable", amount: 3200, note: "Monthly grocery on credit", dueDate: dayOffset(-6), status: "open" },
+      { merchantId: sharma.id, party: "Sunita Devi", phone: "9811100022", kind: "receivable", amount: 1450, note: "Household supplies", dueDate: dayOffset(-2), status: "open" },
+      { merchantId: sharma.id, party: "Anwar Bhai (tea stall)", phone: "9811100033", kind: "receivable", amount: 5600, note: "Bulk sugar & milk", dueDate: dayOffset(4), status: "open" },
+      { merchantId: sharma.id, party: "Priya Sharma", phone: "9811100044", kind: "receivable", amount: 900, note: "Snacks", dueDate: dayOffset(9), status: "open" },
+      { merchantId: sharma.id, party: "Karan General Store", phone: "9811100055", kind: "receivable", amount: 2750, note: "Wholesale resale", dueDate: dayOffset(-14), status: "open" },
+      { merchantId: sharma.id, party: "Metro Cash & Carry", phone: "9899000011", kind: "payable", amount: 18200, note: "Stock invoice due", dueDate: dayOffset(3), status: "open" },
+      { merchantId: sharma.id, party: "Shree Packaging Works", phone: "9899000022", kind: "payable", amount: 4300, note: "Packaging order", dueDate: dayOffset(11), status: "open" },
+    ],
+  });
+
   // ---- Generate GSTR-3B drafts ----
   for (const m of [sharma, anand]) {
     for (const per of [prev, cur]) {

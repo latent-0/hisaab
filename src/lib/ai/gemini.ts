@@ -6,6 +6,7 @@ import {
   ANSWER_SYSTEM,
   CLASSIFY_SYSTEM,
   INTAKE_SYSTEM,
+  NOTICE_SYSTEM,
   answerSchema,
   answerUserPrompt,
   classifySchema,
@@ -13,8 +14,10 @@ import {
   extractJson,
   intakeSchema,
   intakeUserPrompt,
+  noticeSchema,
+  noticeUserPrompt,
 } from "./prompts";
-import type { AiEngine, AnswerInput, AnswerResult, ClassifyInput, IntakeInput } from "./types";
+import type { AiEngine, AnswerInput, AnswerResult, ClassifyInput, ExplainNoticeInput, IntakeInput } from "./types";
 
 const MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";
 
@@ -66,6 +69,16 @@ export const geminiEngine: AiEngine = {
     } catch (err) {
       console.warn("[gemini.answer] falling back to mock:", (err as Error).message);
       return mockEngine.answer(input);
+    }
+  },
+
+  async explainNotice(input: ExplainNoticeInput) {
+    try {
+      const out = await callGemini(NOTICE_SYSTEM, noticeUserPrompt(input));
+      return noticeSchema.parse(extractJson(out));
+    } catch (err) {
+      console.warn("[gemini.explainNotice] falling back to mock:", (err as Error).message);
+      return mockEngine.explainNotice(input);
     }
   },
 };

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { EXPENSE_CATEGORIES } from "../constants";
-import type { AnswerInput, ClassifyInput, IntakeInput } from "./types";
+import type { AnswerInput, ClassifyInput, ExplainNoticeInput, IntakeInput } from "./types";
 
 const categoryKeys = Object.keys(EXPENSE_CATEGORIES);
 
@@ -88,6 +88,29 @@ export function answerUserPrompt(input: AnswerInput): string {
 Filing period: ${input.period}
 Facts (INR values): ${JSON.stringify(input.facts)}
 Merchant asked: "${input.question}"
+Return the JSON now.`;
+}
+
+export const noticeSchema = z.object({
+  title: z.string(),
+  summary: z.string(),
+  severity: z.enum(["low", "medium", "high"]),
+  steps: z.array(z.string()),
+  deadlineHint: z.string().nullable().optional(),
+});
+
+export const NOTICE_SYSTEM = `You are Hisaab's GST notice assistant for a small Indian merchant.
+Explain a GST / tax notice in plain, calm language a non-expert understands, and
+give concrete next steps. Return ONLY strict JSON:
+{"title": string, "summary": string, "severity": "low"|"medium"|"high", "steps": string[], "deadlineHint": string|null}
+"severity" reflects urgency (a show-cause/demand/DRC is high; a routine mismatch is medium).
+Reply in the requested language. Do not invent specific figures or dates not present in the notice.`;
+
+export function noticeUserPrompt(input: ExplainNoticeInput): string {
+  return `Language: ${input.language}
+--- NOTICE TEXT ---
+${input.notice.slice(0, 4000)}
+--- END ---
 Return the JSON now.`;
 }
 

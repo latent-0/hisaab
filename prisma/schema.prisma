@@ -35,6 +35,26 @@ model Merchant {
   reviews   ReviewTask[]
   runs      AgentRun[]
   voice     VoiceQuery[]
+  ledger    LedgerEntry[]
+}
+
+// Digital khata: money customers owe the merchant (receivable / udhaar) and
+// money the merchant owes suppliers (payable).
+model LedgerEntry {
+  id             String    @id @default(cuid())
+  merchantId     String
+  merchant       Merchant  @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  party          String // customer or supplier name
+  phone          String?
+  kind           String // receivable | payable
+  amount         Float
+  note           String?
+  dueDate        DateTime?
+  status         String    @default("open") // open | paid
+  lastRemindedAt DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([merchantId, status])
 }
 
 // Sales come from Paytm settlements (QR / Soundbox / EDC). In dev they are
