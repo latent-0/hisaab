@@ -127,13 +127,30 @@ schema moves to Postgres by changing one `provider` line.
 
 ## Deploy to Google Cloud Run
 
+The default image is self-contained (SQLite + seed on boot) — great for a live
+demo. **Data is ephemeral on Cloud Run** (resets on cold start); see below for a
+durable Postgres setup.
+
+### Option A — one command (gcloud CLI)
+
 ```bash
 PROJECT_ID=your-project REGION=asia-south1 ./deploy/cloudrun.sh
 ```
 
-This builds the container with Cloud Build and deploys it. The default image is
-self-contained (SQLite + seed on boot) — great for a live demo. **Data is
-ephemeral on Cloud Run** (resets on cold start).
+Builds with Cloud Build, deploys to Cloud Run, and forwards every provider key it
+finds in your local `.env` (Groq, Sarvam, Cognee, …) as service env vars.
+
+### Option B — no CLI (deploy from the GitHub repo)
+
+1. Cloud Run → **Create service** → **Continuously deploy from a repository** →
+   connect `github.com/latent-0/hisaab` → build type **Dockerfile**.
+2. Set **Container port** `8080`, allow unauthenticated.
+3. Add environment variables (Variables & Secrets):
+   `LLM_PROVIDER=groq`, `GROQ_API_KEY`, `GROQ_MODEL`,
+   `VOICE_PROVIDER=sarvam`, `SARVAM_API_KEY`,
+   `COGNEE_API_BASE`, `COGNEE_API_KEY`, `COGNEE_TENANT_ID`,
+   `SESSION_SECRET`, `AUTOMATION_TOKEN`, `HISAAB_SEED=true`.
+4. Deploy. (Put API keys in **Secrets**, not plain vars, for production.)
 
 ### Production database (durable)
 
