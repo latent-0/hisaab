@@ -1,7 +1,7 @@
-# Hisaab — container image for Google Cloud Run.
+# Hisaab, container image for Google Cloud Run.
 #
 # Runs with zero external services using the SQLite + mock/sandbox defaults
-# (data is ephemeral on Cloud Run — resets on cold start). For real production,
+# (data is ephemeral on Cloud Run, resets on cold start). For real production,
 # point DATABASE_URL at Cloud SQL Postgres (see README) and set HISAAB_SEED=false.
 
 FROM node:20-slim AS base

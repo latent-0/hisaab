@@ -22,14 +22,14 @@ export default async function SettingsPage() {
       icon: Bot,
       name: "LLM provider (agents)",
       value: llmProvider,
-      detail: llmModel ? `Model: ${llmModel}` : "Deterministic rule-based engine — no API key needed.",
+      detail: llmModel ? `Model: ${llmModel}` : "Deterministic rule-based engine, no API key needed.",
     },
     {
       icon: Brain,
       name: "Knowledge memory",
       value: process.env.COGNEE_API_KEY ? "cognee" : "off",
       detail: process.env.COGNEE_API_KEY
-        ? "Cognee knowledge graph — ask your books on Analytics."
+        ? "Cognee knowledge graph, ask your books on Analytics."
         : "Set COGNEE_API_KEY to enable graph memory.",
     },
     {
@@ -104,7 +104,7 @@ export default async function SettingsPage() {
               </div>
               <p className="mt-1 max-w-md text-sm text-ink-muted">
                 {merchant.planTier === "pro"
-                  ? "CA-reviewed filing, priority support, and multi-GSTIN — on top of the free copilot."
+                  ? "CA-reviewed filing, priority support, and multi-GSTIN, on top of the free copilot."
                   : "The copilot is free forever. Upgrade to Pro for CA-reviewed filing and priority support."}
               </p>
             </div>

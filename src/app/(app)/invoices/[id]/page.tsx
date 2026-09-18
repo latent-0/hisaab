@@ -35,7 +35,7 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
   const steps = parseJson<AgentStepTrace[]>(run?.steps ?? null, []);
 
   const gst = (invoice.cgst + invoice.sgst + invoice.igst) || 0;
-  const cat = invoice.category ? EXPENSE_CATEGORIES[invoice.category]?.label ?? invoice.category : "—";
+  const cat = invoice.category ? EXPENSE_CATEGORIES[invoice.category]?.label ?? invoice.category : ", ";
 
   return (
     <div className="space-y-6">
@@ -53,7 +53,7 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
             <StatusBadge status={invoice.status} />
           </div>
           <p className="mt-1 text-sm text-ink-muted">
-            {invoice.invoiceNo ?? "—"} ·{" "}
+            {invoice.invoiceNo ?? ", "} ·{" "}
             {invoice.invoiceDate ? new Date(invoice.invoiceDate).toLocaleDateString("en-IN", { dateStyle: "medium" }) : "no date"} ·{" "}
             {invoice.supplierGstin ?? "no GSTIN"}
           </p>
@@ -163,7 +163,7 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
             <h2 className="mb-3 text-sm font-semibold text-ink">Tax summary</h2>
             <dl className="space-y-2.5 text-sm">
               <Line label="Taxable value" value={inr(invoice.taxableValue ?? 0)} />
-              <Line label="GST rate" value={invoice.gstRate != null ? `${invoice.gstRate}%` : "—"} />
+              <Line label="GST rate" value={invoice.gstRate != null ? `${invoice.gstRate}%` : ", "} />
               <Line label="CGST" value={inr(invoice.cgst)} />
               <Line label="SGST" value={inr(invoice.sgst)} />
               <Line label="IGST" value={inr(invoice.igst)} />

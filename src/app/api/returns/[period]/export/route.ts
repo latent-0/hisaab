@@ -36,7 +36,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ period:
         },
       ],
     },
-    // 5.1 Interest & late fee — nil in this draft
+    // 5.1 Interest & late fee, nil in this draft
     intr_ltfee: { intr_details: { camt: 0, samt: 0, iamt: 0 } },
     _hisaab: {
       generatedBy: "Hisaab",

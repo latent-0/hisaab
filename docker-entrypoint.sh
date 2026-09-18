@@ -10,7 +10,7 @@ if [ "$HISAAB_SEED" = "true" ]; then
     echo "[hisaab] Seeding demo data…"
     npx tsx prisma/seed.ts || echo "[hisaab] seed failed (continuing)"
   else
-    echo "[hisaab] Data already present ($COUNT merchants) — skipping seed."
+    echo "[hisaab] Data already present ($COUNT merchants), skipping seed."
   fi
 fi
 

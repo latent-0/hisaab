@@ -23,7 +23,7 @@ export default async function ReturnsPage() {
         <div>
           <h1 className="text-[1.9rem] font-light tracking-tight text-ink">GST returns</h1>
           <p className="mt-1 text-sm text-ink-muted">
-            Pre-filled GSTR-3B drafts — always reviewed by a human before filing.
+            Pre-filled GSTR-3B drafts, always reviewed by a human before filing.
           </p>
         </div>
         {!hasCurrent && (
@@ -72,7 +72,7 @@ export default async function ReturnsPage() {
                     <td className="px-4 py-3 text-right font-semibold text-ink">{inr(r.netPayable)}</td>
                     <td className="px-4 py-3"><StatusBadge status={r.status} /></td>
                     <td className="px-4 py-3 text-xs text-ink-muted">
-                      {r.status === "filed" ? "—" : left >= 0 ? `${left} days` : `${-left} days ago`}
+                      {r.status === "filed" ? ", " : left >= 0 ? `${left} days` : `${-left} days ago`}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Link href={`/returns/${r.period}`} className="inline-flex items-center gap-1 text-sm font-medium text-brand-600">

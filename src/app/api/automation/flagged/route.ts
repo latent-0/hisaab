@@ -28,7 +28,7 @@ export async function GET(req: Request) {
       itc: 0,
     };
     cur.items.push(
-      `• ${inv.supplierName ?? "Unknown"} — ${inv.invoiceNo ?? "no #"} (${inr(gst)} ITC, 2B: ${inv.gstr2bStatus})`,
+      `• ${inv.supplierName ?? "Unknown"}, ${inv.invoiceNo ?? "no #"} (${inr(gst)} ITC, 2B: ${inv.gstr2bStatus})`,
     );
     cur.itc += gst;
     byMerchant.set(key, cur);
@@ -41,9 +41,9 @@ export async function GET(req: Request) {
     invoices.length === 0
       ? "✅ Hisaab: no invoices are flagged for review right now."
       : [
-          `🧾 *Hisaab — ${invoices.length} invoice(s) flagged for review* (${inr(totalItc)} ITC at stake)`,
+          `🧾 *Hisaab, ${invoices.length} invoice(s) flagged for review* (${inr(totalItc)} ITC at stake)`,
           "",
-          ...groups.map((g) => `*${g.business}* (${g.gstin}) — ${inr(g.itc)} ITC\n${g.items.join("\n")}`),
+          ...groups.map((g) => `*${g.business}* (${g.gstin}), ${inr(g.itc)} ITC\n${g.items.join("\n")}`),
         ].join("\n");
 
   return NextResponse.json({

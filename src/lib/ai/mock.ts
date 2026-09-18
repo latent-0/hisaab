@@ -201,7 +201,7 @@ export const mockEngine: AiEngine = {
       answerText = isHindi
         ? `इस महीने आपने ${money(f.itcThisMonth)} का इनपुट टैक्स क्रेडिट क्लेम किया है। ${money(
             f.unclaimedItc,
-          )} अभी भी अनक्लेम्ड है — फाइल करने से पहले ${f.flaggedCount ?? 0} इनवॉइस की समीक्षा करें।`
+          )} अभी भी अनक्लेम्ड है, फाइल करने से पहले ${f.flaggedCount ?? 0} इनवॉइस की समीक्षा करें।`
         : `You've claimed ${money(f.itcThisMonth)} in input tax credit this month, and ${money(
             f.unclaimedItc,
           )} is still unclaimed. Review ${f.flaggedCount ?? 0} flagged invoice(s) before filing to catch it.`;
@@ -231,8 +231,8 @@ export const mockEngine: AiEngine = {
     } else if (/(deadline|due|कब|तारीख|file)/i.test(q)) {
       intent = "deadline";
       answerText = isHindi
-        ? `आपका GSTR-3B अगले महीने की 20 तारीख तक फाइल करना है। ड्राफ्ट तैयार है — बस समीक्षा करें।`
-        : `Your GSTR-3B is due by the 20th of next month. The draft is ready — just review and file.`;
+        ? `आपका GSTR-3B अगले महीने की 20 तारीख तक फाइल करना है। ड्राफ्ट तैयार है, बस समीक्षा करें।`
+        : `Your GSTR-3B is due by the 20th of next month. The draft is ready, just review and file.`;
     } else {
       answerText = isHindi
         ? `इस महीने: बिक्री ${money(f.salesTotal)}, ITC ${money(f.itcThisMonth)}, नेट देय ${money(

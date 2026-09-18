@@ -24,7 +24,7 @@ export default async function ReviewPage() {
       <div>
         <h1 className="text-[1.9rem] font-light tracking-tight text-ink">Review queue</h1>
         <p className="mt-1 text-sm text-ink-muted">
-          A human reviews anything the model isn&apos;t sure about — always. Clear these before filing.
+          A human reviews anything the model isn&apos;t sure about, always. Clear these before filing.
         </p>
       </div>
 
@@ -65,7 +65,7 @@ export default async function ReviewPage() {
       {tasks.length === 0 ? (
         <EmptyState
           icon={<CheckCircle2 className="h-10 w-10 text-success" />}
-          title="All clear — nothing to review"
+          title="All clear, nothing to review"
           description="Every invoice is reconciled and your GSTR-3B draft is ready to file."
           action={<Link href="/returns" className="btn-primary">Go to returns</Link>}
         />

@@ -7,7 +7,7 @@ import { currentPeriod, daysUntil, periodLabel, returnDueDate } from "@/lib/util
 /**
  * n8n / cron entrypoint: for the current filing period, return each merchant's
  * unfiled GSTR-3B status, days to the due date, net payable, unclaimed ITC and
- * open review count — so a workflow can send WhatsApp/Slack/email reminders.
+ * open review count, so a workflow can send WhatsApp/Slack/email reminders.
  * Bearer-token protected.
  */
 export async function GET(req: Request) {

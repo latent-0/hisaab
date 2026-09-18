@@ -1,9 +1,9 @@
-// Sarvam client — Indic speech + translation.
+// Sarvam client, Indic speech + translation.
 //   - Text-to-Speech (bulbul): speak answers in the merchant's language.
 //   - Speech-to-Text (saarika): transcribe spoken Indic questions.
 //   - Translate (mayura): localize English (e.g. Cognee) answers.
 // All optional: if SARVAM_API_KEY is unset, callers fall back (browser
-// speech / English text). Failures never throw to the user — they return null.
+// speech / English text). Failures never throw to the user, they return null.
 
 const BASE = "https://api.sarvam.ai";
 const KEY = process.env.SARVAM_API_KEY ?? "";

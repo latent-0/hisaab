@@ -2,7 +2,7 @@
   "name": "hisaab",
   "version": "0.1.0",
   "private": true,
-  "description": "Hisaab — the GST copilot built into every Paytm transaction.",
+  "description": "Hisaab, the GST copilot built into every Paytm transaction.",
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",

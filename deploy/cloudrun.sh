@@ -5,7 +5,7 @@
 # Usage:   PROJECT_ID=my-proj REGION=asia-south1 ./deploy/cloudrun.sh
 #
 # By default this deploys the self-contained SQLite build (data resets on cold
-# start — fine for a demo). For durable data, provision Cloud SQL Postgres and
+# start, fine for a demo). For durable data, provision Cloud SQL Postgres and
 # pass DATABASE_URL (see README "Production database").
 
 set -euo pipefail

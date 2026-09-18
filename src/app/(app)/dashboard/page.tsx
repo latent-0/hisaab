@@ -211,7 +211,7 @@ export default async function DashboardPage() {
       {/* Charts */}
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
-          <h2 className="mb-3 text-sm font-semibold text-ink">Sales & ITC — last 3 months</h2>
+          <h2 className="mb-3 text-sm font-semibold text-ink">Sales & ITC, last 3 months</h2>
           <SalesTrendChart data={trend} />
         </Card>
         <Card>
@@ -237,7 +237,7 @@ export default async function DashboardPage() {
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium text-ink">{inv.supplierName ?? "Unknown supplier"}</p>
                       <p className="truncate text-xs text-ink-muted">
-                        {inv.invoiceNo ?? "—"} · {inr((inv.cgst + inv.sgst + inv.igst) || 0)} ITC
+                        {inv.invoiceNo ?? ", "} · {inr((inv.cgst + inv.sgst + inv.igst) || 0)} ITC
                       </p>
                     </div>
                     <StatusBadge status={inv.gstr2bStatus} />

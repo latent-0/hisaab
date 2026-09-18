@@ -61,7 +61,7 @@ export async function processInvoice(invoiceId: string): Promise<ProcessResult> 
         supplierGstin: invoice.supplierGstin ?? undefined,
         invoiceNo: invoice.invoiceNo ?? undefined,
         taxableValue: invoice.taxableValue || undefined,
-        // 0 means "not provided yet" — let Intake parse from the document.
+        // 0 means "not provided yet", let Intake parse from the document.
         cgst: invoice.cgst || undefined,
         sgst: invoice.sgst || undefined,
         igst: invoice.igst || undefined,
@@ -102,7 +102,7 @@ export async function processInvoice(invoiceId: string): Promise<ProcessResult> 
     label: "Classify",
     status: cls.confidence < 0.6 ? "review" : "ok",
     confidence: cls.confidence,
-    summary: `${cls.category} · ${cls.itcEligible ? "ITC eligible" : "ITC blocked"} — ${cls.reasoning}`,
+    summary: `${cls.category} · ${cls.itcEligible ? "ITC eligible" : "ITC blocked"}, ${cls.reasoning}`,
     durationMs: clsMs,
     provider: engine.name,
   });
@@ -160,7 +160,7 @@ export async function processInvoice(invoiceId: string): Promise<ProcessResult> 
     });
   }
 
-  // Blocked ITC (Sec 17(5)) is handled confidently — we simply exclude the
+  // Blocked ITC (Sec 17(5)) is handled confidently, we simply exclude the
   // credit and surface it on the invoice; it does not need human review unless
   // extraction confidence is otherwise low.
 

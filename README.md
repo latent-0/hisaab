@@ -1,13 +1,13 @@
-# Hisaab — the GST copilot built into every Paytm transaction
+# Hisaab, the GST copilot built into every Paytm transaction
 
 Hisaab reads a merchant's sales straight from Paytm's ledger, matches them to
 purchase invoices, catches every unclaimed rupee of **Input Tax Credit (ITC)**,
-and pre-fills **GSTR-3B** — always reviewed by a human before filing. Voice-first,
+and pre-fills **GSTR-3B**, always reviewed by a human before filing. Voice-first,
 in the merchant's own language.
 
 > Build for India · Merchant Growth AI track.
 
-<p align="center"><em>Intake → Classify → Cross-Check → Calculate → Generate — five agents, one pipeline, human-reviewed.</em></p>
+<p align="center"><em>Intake → Classify → Cross-Check → Calculate → Generate, five agents, one pipeline, human-reviewed.</em></p>
 
 ---
 
@@ -15,29 +15,29 @@ in the merchant's own language.
 
 | | Existing GST tools | **Hisaab** |
 |---|---|---|
-| Data entry | Manual, every invoice | **Automatic — zero entry** |
+| Data entry | Manual, every invoice | **Automatic, zero entry** |
 | Where it lives | A separate app to remember | **Inside the Paytm app** |
 | Update speed | Monthly, at filing time | **Real-time, every settlement** |
 
-The sales side (QR / Soundbox / EDC) is the wedge no standalone tool can see —
+The sales side (QR / Soundbox / EDC) is the wedge no standalone tool can see, 
 Hisaab treats it as a first-class ledger and reconciles the purchase side against it.
 
 ---
 
 ## What's in the box
 
-- **Marketing site** (`/`) and a **merchant dashboard** — the "moment that sells it":
+- **Marketing site** (`/`) and a **merchant dashboard**, the "moment that sells it":
   unclaimed ITC this month, invoices flagged before filing, and a voice assistant.
 - **5-agent pipeline** over every purchase invoice:
-  1. **Intake** — reads the invoice (OCR / paste / manual) into structured fields
-  2. **Classify** — expense category + ITC eligibility (incl. Section 17(5) blocked credits)
-  3. **Cross-Check** — GSTR-2B reconciliation, GSTIN validation, duplicate detection
-  4. **Calculate** — claimable ITC, net liability
-  5. **Generate** — a GSTR-3B draft (per-rate, exportable)
-- **Reconciliation** view — the two ledgers, finally talking.
-- **Human-in-the-loop review queue** — anything low-confidence lands here.
-- **Voice assistant** — "इस महीने कितना GST बचा?" answered out loud, in-language.
-- **n8n automations** — scheduled settlement sync + filing reminders.
+  1. **Intake**, reads the invoice (OCR / paste / manual) into structured fields
+  2. **Classify**, expense category + ITC eligibility (incl. Section 17(5) blocked credits)
+  3. **Cross-Check**, GSTR-2B reconciliation, GSTIN validation, duplicate detection
+  4. **Calculate**, claimable ITC, net liability
+  5. **Generate**, a GSTR-3B draft (per-rate, exportable)
+- **Reconciliation** view, the two ledgers, finally talking.
+- **Human-in-the-loop review queue**, anything low-confidence lands here.
+- **Voice assistant**, "इस महीने कितना GST बचा?" answered out loud, in-language.
+- **n8n automations**, scheduled settlement sync + filing reminders.
 - **Cloud Run**-ready container.
 
 Everything runs **with zero API keys** using deterministic mock/sandbox providers.
@@ -70,7 +70,7 @@ Sign in as **Sharma General Store** (phone `9876543210`) or **Anand Tiffins**
 
 ## Configuration
 
-All optional — see [`.env.example`](.env.example). The app degrades gracefully to
+All optional, see [`.env.example`](.env.example). The app degrades gracefully to
 mocks if a key is missing or a call fails.
 
 | Variable | Values | Notes |
@@ -133,15 +133,15 @@ the Dockerfile and starts a free web service. Then open the service's
 **Environment** tab and set the secret keys: `GROQ_API_KEY`, `SARVAM_API_KEY`,
 `COGNEE_API_BASE`, `COGNEE_API_KEY`, `COGNEE_TENANT_ID`, `AUTOMATION_TOKEN`.
 Health check is `/api/health`. (Free instances sleep after ~15 min idle and cold-start
-on the next request; SQLite reseeds on cold start — fine for a demo.)
+on the next request; SQLite reseeds on cold start, fine for a demo.)
 
 ## Deploy to Google Cloud Run
 
-The default image is self-contained (SQLite + seed on boot) — great for a live
+The default image is self-contained (SQLite + seed on boot), great for a live
 demo. **Data is ephemeral on Cloud Run** (resets on cold start); see below for a
 durable Postgres setup.
 
-### Option A — one command (gcloud CLI)
+### Option A, one command (gcloud CLI)
 
 ```bash
 PROJECT_ID=your-project REGION=asia-south1 ./deploy/cloudrun.sh
@@ -150,7 +150,7 @@ PROJECT_ID=your-project REGION=asia-south1 ./deploy/cloudrun.sh
 Builds with Cloud Build, deploys to Cloud Run, and forwards every provider key it
 finds in your local `.env` (Groq, Sarvam, Cognee, …) as service env vars.
 
-### Option B — no CLI (deploy from the GitHub repo)
+### Option B, no CLI (deploy from the GitHub repo)
 
 1. Cloud Run → **Create service** → **Continuously deploy from a repository** →
    connect `github.com/latent-0/hisaab` → build type **Dockerfile**.
@@ -172,13 +172,13 @@ finds in your local `.env` (Groq, Sarvam, Cognee, …) as service env vars.
 
 ---
 
-## Knowledge memory — "Ask your books" (Cognee)
+## Knowledge memory, "Ask your books" (Cognee)
 
 When `COGNEE_*` is set, the **Analytics** page gains an *Ask your books* card. Hitting
 **Sync** pushes a natural-language knowledge base of the merchant's invoices,
 suppliers, ITC status and monthly returns into a Cognee knowledge graph
 (`src/lib/knowledge.ts` → `src/lib/cognee.ts`). You can then ask cross-time
-questions grounded in that graph — *"Which supplier gave me the most ITC?"*,
+questions grounded in that graph, *"Which supplier gave me the most ITC?"*,
 *"How much ITC is blocked and why?"*, *"How did my net GST change over the months?"*
 Per-merchant isolation uses one Cognee dataset per GSTIN.
 
@@ -187,8 +187,8 @@ Per-merchant isolation uses one Cognee dataset per GSTIN.
 Set `AUTOMATION_TOKEN`, then import the workflows in
 [`integrations/n8n/`](integrations/n8n/):
 
-- **Daily Paytm sync** — refresh settlements + GSTR-3B for all merchants each morning.
-- **GSTR-3B reminders** — localized deadline nudges with net payable & unclaimed ITC.
+- **Daily Paytm sync**, refresh settlements + GSTR-3B for all merchants each morning.
+- **GSTR-3B reminders**, localized deadline nudges with net payable & unclaimed ITC.
 
 ---
 

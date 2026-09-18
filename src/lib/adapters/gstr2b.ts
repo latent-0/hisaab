@@ -62,7 +62,7 @@ export class SandboxGstr2bAdapter implements Gstr2bAdapter {
     if (bucket < 90) {
       return {
         status: "missing",
-        detail: "Not yet reflected in GSTR-2B — supplier may not have filed GSTR-1.",
+        detail: "Not yet reflected in GSTR-2B, supplier may not have filed GSTR-1.",
       };
     }
     const filed = input.taxableValue ? Math.round(input.taxableValue * 0.9) : undefined;

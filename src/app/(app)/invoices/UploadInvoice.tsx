@@ -127,7 +127,7 @@ export function UploadInvoice() {
                   <span className="text-sm font-medium text-ink">
                     {file ? file.name : "Click to choose a file"}
                   </span>
-                  <span className="text-xs text-ink-muted">PDF, image, or .txt — up to 10 MB</span>
+                  <span className="text-xs text-ink-muted">PDF, image, or .txt, up to 10 MB</span>
                   <input
                     type="file"
                     className="hidden"

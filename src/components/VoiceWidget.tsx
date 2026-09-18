@@ -139,7 +139,7 @@ export function VoiceWidget({ language, useSarvam = false }: { language: string;
           const data = await res.json();
           setThinking(false);
           if (data.transcript) ask(data.transcript);
-          else setTurns((t) => [...t, { role: "assistant", text: "I couldn't catch that — please try again or type." }]);
+          else setTurns((t) => [...t, { role: "assistant", text: "I couldn't catch that, please try again or type." }]);
         } catch {
           setThinking(false);
         }

@@ -2,7 +2,7 @@
 //
 // Notes on portability: we use SQLite for local dev (zero setup). To keep the
 // schema identical when moving to Postgres on Cloud Run, we avoid DB-native
-// enums and Json columns — "enum-like" fields are Strings validated in app code
+// enums and Json columns, "enum-like" fields are Strings validated in app code
 // (see src/lib/constants.ts) and structured payloads are stored as JSON strings.
 // To go to Postgres: change `provider` to "postgresql" and set DATABASE_URL.
 
@@ -91,7 +91,7 @@ model PurchaseInvoice {
   itcEligible   Boolean? // eligible for input tax credit?
   itcBlockReason String? // Sec 17(5) block reason if ineligible
 
-  // Cross-check (Cross-Check agent) — GSTR-2B reconciliation
+  // Cross-check (Cross-Check agent), GSTR-2B reconciliation
   gstr2bStatus  String   @default("unknown") // matched | mismatch | missing | unknown
   matchNotes    String?
 

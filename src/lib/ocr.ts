@@ -3,7 +3,7 @@
 //  - "mock" (default): decodes text-based uploads directly (great for the
 //    provided sample .txt invoices and for pasted text). Binary files return
 //    empty text, in which case Intake produces a low-confidence result that is
-//    routed to human review — an honest, working flow with no keys required.
+//    routed to human review, an honest, working flow with no keys required.
 //  - "gemini": uses Gemini's multimodal model to read images/PDFs. Requires
 //    GEMINI_API_KEY.
 

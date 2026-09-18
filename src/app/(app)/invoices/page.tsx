@@ -104,7 +104,7 @@ export default async function InvoicesPage({
               <tbody className="divide-y divide-surface-border">
                 {invoices.map((inv) => {
                   const gst = (inv.cgst + inv.sgst + inv.igst) || 0;
-                  const cat = inv.category ? EXPENSE_CATEGORIES[inv.category]?.label ?? inv.category : "—";
+                  const cat = inv.category ? EXPENSE_CATEGORIES[inv.category]?.label ?? inv.category : ", ";
                   return (
                     <tr key={inv.id} className="group transition hover:bg-surface-muted">
                       <td className="px-4 py-3">
@@ -116,9 +116,9 @@ export default async function InvoicesPage({
                         </Link>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-ink">{inv.invoiceNo ?? "—"}</span>
+                        <span className="text-ink">{inv.invoiceNo ?? ", "}</span>
                         <span className="block text-xs text-ink-muted">
-                          {inv.invoiceDate ? new Date(inv.invoiceDate).toLocaleDateString("en-IN") : "—"}
+                          {inv.invoiceDate ? new Date(inv.invoiceDate).toLocaleDateString("en-IN") : ", "}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-ink-soft">{cat}</td>
@@ -129,7 +129,7 @@ export default async function InvoicesPage({
                         ) : inv.itcEligible ? (
                           <Badge tone="green">Eligible</Badge>
                         ) : (
-                          <Badge tone="gray">—</Badge>
+                          <Badge tone="gray">, </Badge>
                         )}
                       </td>
                       <td className="px-4 py-3"><StatusBadge status={inv.gstr2bStatus} /></td>

@@ -42,7 +42,7 @@ export default async function LandingPage() {
         </div>
       </header>
 
-      {/* Hero — left text, product visual on the right */}
+      {/* Hero, left text, product visual on the right */}
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute -left-40 top-0 h-[560px] w-[820px] rounded-full bg-brand-500/20 blur-[150px]" />
         <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pb-24 pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:pt-28">
@@ -73,12 +73,12 @@ export default async function LandingPage() {
             </div>
           </div>
 
-          {/* Right — the product moment as hero visual (real data) */}
+          {/* Right, the product moment as hero visual (real data) */}
           <HeroVisual snap={snap} />
         </div>
       </section>
 
-      {/* Live impact — real numbers from the database */}
+      {/* Live impact, real numbers from the database */}
       <section className="border-y border-white/10 bg-white/[0.02]">
         <div className="mx-auto max-w-6xl px-5 py-10">
           <div className="mb-6 flex items-center gap-2 text-xs font-medium tracking-[0.2em] text-brand-300">
@@ -99,11 +99,11 @@ export default async function LandingPage() {
       <Section id="problem" eyebrow="THE PROBLEM" title="Two ledgers that never talk to each other">
         <div className="grid gap-4 md:grid-cols-2">
           <GlassCard>
-            <h3 className="text-lg font-medium">Sales — live in Paytm</h3>
-            <p className="mt-2 text-white/55">Every QR, Soundbox and EDC transaction is captured — but never automatically matched to what you buy.</p>
+            <h3 className="text-lg font-medium">Sales, live in Paytm</h3>
+            <p className="mt-2 text-white/55">Every QR, Soundbox and EDC transaction is captured, but never automatically matched to what you buy.</p>
           </GlassCard>
           <GlassCard>
-            <h3 className="text-lg font-medium">Purchases — on paper</h3>
+            <h3 className="text-lg font-medium">Purchases, on paper</h3>
             <p className="mt-2 text-white/55">Supplier invoices pile up in a drawer, so input tax credit quietly slips away.</p>
           </GlassCard>
         </div>
@@ -117,7 +117,7 @@ export default async function LandingPage() {
       <Section id="product" eyebrow="THE PRODUCT" title="Your GST, sorted automatically">
         <div className="grid gap-4 md:grid-cols-3">
           <Feature icon={<Receipt className="h-5 w-5" />} title="Auto-Reconcile">
-            Matches Paytm settlements to purchase invoices — no re-typing, ever.
+            Matches Paytm settlements to purchase invoices, no re-typing, ever.
           </Feature>
           <Feature icon={<Wallet className="h-5 w-5" />} title="Catch Every Rupee">
             Flags unclaimed input tax credit before it&apos;s lost for good.
@@ -152,7 +152,7 @@ export default async function LandingPage() {
           })}
         </div>
         <p className="mt-6 text-center text-sm text-white/40">
-          A human reviews anything the model isn&apos;t sure about — always.
+          A human reviews anything the model isn&apos;t sure about, always.
         </p>
       </Section>
 
@@ -160,7 +160,7 @@ export default async function LandingPage() {
       <Section id="moat" eyebrow="THE MOAT" title="Why only Paytm can build this">
         <div className="grid gap-4 md:grid-cols-3">
           <Feature icon={<ShieldCheck className="h-5 w-5" />} title="Owns the ledger">
-            Real-time visibility into every QR, Soundbox and EDC transaction — the sales side no other tool can see.
+            Real-time visibility into every QR, Soundbox and EDC transaction, the sales side no other tool can see.
           </Feature>
           <Feature icon={<BadgeCheck className="h-5 w-5" />} title="Already the default">
             4.8 crore+ registered merchants already open Paytm every day.

@@ -1,4 +1,4 @@
-// Cognee client — AI memory / knowledge graph over a merchant's GST history.
+// Cognee client, AI memory / knowledge graph over a merchant's GST history.
 //
 // Flow: add(raw text) → cognify(build graph) → search(natural-language query).
 // Everything is optional: if COGNEE_* env vars are unset, cogneeConfigured()

@@ -1,4 +1,4 @@
-# Render Blueprint — deploy Hisaab as a free Docker web service.
+# Render Blueprint, deploy Hisaab as a free Docker web service.
 # In Render: New → Blueprint → connect github.com/latent-0/hisaab.
 # Secret keys (sync:false) are entered once in the Render dashboard.
 services:

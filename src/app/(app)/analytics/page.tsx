@@ -24,7 +24,7 @@ export default async function AnalyticsPage() {
       <div>
         <h1 className="text-[1.9rem] font-light tracking-tight text-ink">Analytics &amp; impact</h1>
         <p className="mt-1 text-sm text-ink-muted">
-          What Hisaab has done for {merchant.businessName} — measured, not claimed.
+          What Hisaab has done for {merchant.businessName}, measured, not claimed.
         </p>
       </div>
 
@@ -64,7 +64,7 @@ export default async function AnalyticsPage() {
 
       {/* Trend */}
       <Card>
-        <h2 className="mb-1 text-sm font-semibold text-ink">Tax position — last 6 months</h2>
+        <h2 className="mb-1 text-sm font-semibold text-ink">Tax position, last 6 months</h2>
         <p className="mb-3 text-xs text-ink-muted">Output tax vs. ITC claimed vs. net payable</p>
         <TrendChart data={a.trend} />
       </Card>
@@ -119,7 +119,7 @@ export default async function AnalyticsPage() {
       </div>
 
       <p className="text-center text-xs text-ink-muted">
-        Estimates use {inNum(8)} min saved per invoice and 45 min per return — replace with your own benchmarks in{" "}
+        Estimates use {inNum(8)} min saved per invoice and 45 min per return, replace with your own benchmarks in{" "}
         <code className="rounded bg-surface-muted px-1">src/lib/analytics.ts</code>.
       </p>
     </div>

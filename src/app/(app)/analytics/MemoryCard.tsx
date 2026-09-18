@@ -59,7 +59,7 @@ export function MemoryCard({
       } else {
         setNote(
           syncedAt
-            ? "No grounded answer yet — the graph may still be building, or try rephrasing."
+            ? "No grounded answer yet, the graph may still be building, or try rephrasing."
             : "Sync your knowledge first, then ask.",
         );
       }
@@ -87,7 +87,7 @@ export function MemoryCard({
               {configured
                 ? syncedAt
                   ? `Knowledge graph synced ${new Date(syncedAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}.`
-                  : "Not synced yet — push your GST history into the knowledge graph."
+                  : "Not synced yet, push your GST history into the knowledge graph."
                 : "Not configured. Add COGNEE_API_BASE and COGNEE_API_KEY to enable."}
             </p>
           </div>

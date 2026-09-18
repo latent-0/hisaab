@@ -3,7 +3,7 @@ import { computeDashboardStats } from "./returns";
 import { currentPeriod, round2 } from "./utils";
 
 /**
- * Real, live aggregate metrics computed from the database — used on the landing
+ * Real, live aggregate metrics computed from the database, used on the landing
  * page to show the system's actual working impact (grows as invoices are added).
  */
 export async function getImpactStats() {

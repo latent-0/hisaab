@@ -48,7 +48,7 @@ export default async function ReconciliationPage() {
         <div>
           <h1 className="text-[1.9rem] font-light tracking-tight text-ink">Reconciliation</h1>
           <p className="mt-1 text-sm text-ink-muted">
-            Two ledgers, finally talking — Paytm sales matched to purchase invoices for {periodLabel(period)}.
+            Two ledgers, finally talking, Paytm sales matched to purchase invoices for {periodLabel(period)}.
           </p>
         </div>
         <ActionButton url="/api/sales/sync" body={{ period }} variant="ghost">

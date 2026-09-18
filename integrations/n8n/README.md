@@ -7,9 +7,9 @@ automation API (`/api/automation/*`).
 
 1. In the Hisaab app, set `AUTOMATION_TOKEN` to a long random string.
 2. In n8n, add these environment variables (Settings → Variables, or host env):
-   - `HISAAB_URL` — your deployed base URL, e.g. `https://hisaab-xxxx.a.run.app`
-   - `HISAAB_AUTOMATION_TOKEN` — the same value as `AUTOMATION_TOKEN`
-   - `SLACK_WEBHOOK_URL` — (reminders workflow only) an incoming webhook, or
+   - `HISAAB_URL`, your deployed base URL, e.g. `https://hisaab-xxxx.a.run.app`
+   - `HISAAB_AUTOMATION_TOKEN`, the same value as `AUTOMATION_TOKEN`
+   - `SLACK_WEBHOOK_URL`, (reminders workflow only) an incoming webhook, or
      replace that node with WhatsApp Business / email / SMS.
 3. Import the JSON files (n8n → Workflows → Import from File) and activate them.
 
