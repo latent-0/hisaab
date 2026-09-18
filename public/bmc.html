@@ -1,0 +1,531 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hisaab Business Model</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #eaeef5;
+    --surface: #ffffff;
+    --surface-2: #f5f8fd;
+    --border: #dde4f0;
+    --ink: #0b1120;
+    --ink-soft: #33405a;
+    --muted: #6b778f;
+    --brand: #1a48e0;
+    --infra: #5a6b86;
+    --offer: #1a48e0;
+    --customer: #0e8f83;
+    --finance: #b0791a;
+    --shadow: 0 1px 2px rgba(16,24,40,.04), 0 10px 30px rgba(16,24,40,.06);
+    --font-display: "Space Grotesk", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #080d18;
+      --surface: #121b2c;
+      --surface-2: #0e1626;
+      --border: #243049;
+      --ink: #eef2fb;
+      --ink-soft: #c4cde1;
+      --muted: #8a97b2;
+      --brand: #6f9bff;
+      --infra: #9aa8c2;
+      --offer: #6f9bff;
+      --customer: #2fd4c1;
+      --finance: #e8b64a;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 34px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #080d18;
+    --surface: #121b2c;
+    --surface-2: #0e1626;
+    --border: #243049;
+    --ink: #eef2fb;
+    --ink-soft: #c4cde1;
+    --muted: #8a97b2;
+    --brand: #6f9bff;
+    --infra: #9aa8c2;
+    --offer: #6f9bff;
+    --customer: #2fd4c1;
+    --finance: #e8b64a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 34px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.5; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding-block: 40px 64px; padding-inline: 20px; }
+
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  /* ---- Masthead ---- */
+  .mast { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 12px; }
+  .brand { display: flex; align-items: center; gap: 11px; }
+  .logo { width: 40px; height: 40px; border-radius: 11px; background: linear-gradient(150deg, #2f63f6, #1a48e0); display: grid; place-items: center; color: #fff; font-family: var(--font-display); font-weight: 600; font-size: 20px; box-shadow: var(--shadow); }
+  .brand b { font-family: var(--font-display); font-weight: 600; font-size: 19px; letter-spacing: -.01em; }
+  .brand span { display: block; font-size: 11.5px; color: var(--muted); }
+  .mast-meta { text-align: right; font-size: 12px; color: var(--muted); }
+  .mast-meta b { color: var(--ink-soft); font-family: var(--font-display); font-weight: 500; }
+
+  .eyebrow { font-size: 11.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--brand); }
+  .lede { font-family: var(--font-display); font-weight: 400; font-size: clamp(22px, 3.4vw, 32px); letter-spacing: -.025em; line-height: 1.12; margin: 8px 0 6px; max-width: 22ch; }
+  .lede em { font-style: normal; color: var(--brand); }
+  .sub { color: var(--ink-soft); max-width: 62ch; font-size: 15px; }
+
+  /* ---- Legend ---- */
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 22px 0 14px; font-size: 12px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .dot { width: 9px; height: 9px; border-radius: 3px; }
+
+  /* ---- BMC grid ---- */
+  .bmc { display: grid; gap: 10px; grid-template-columns: repeat(5, 1fr);
+    grid-template-areas:
+      "kp ka vp cr cs"
+      "kp kr vp ch cs"
+      "cost cost cost rev rev"; }
+  .block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 15px 15px 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 9px; min-width: 0; }
+  .kp{grid-area:kp}.ka{grid-area:ka}.kr{grid-area:kr}.vp{grid-area:vp}.cr{grid-area:cr}.ch{grid-area:ch}.cs{grid-area:cs}.cost{grid-area:cost}.rev{grid-area:rev}
+
+  .block-head { display: flex; align-items: center; gap: 9px; }
+  .num { font-family: var(--font-display); font-weight: 600; font-size: 12px; color: var(--area); background: color-mix(in srgb, var(--area) 13%, transparent); border-radius: 7px; padding: 3px 7px; letter-spacing: 0; }
+  .block h3 { font-size: 14.5px; font-weight: 600; color: var(--ink); }
+  .block ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .block li { position: relative; padding-left: 15px; font-size: 12.9px; color: var(--ink-soft); }
+  .block li::before { content: ""; position: absolute; left: 2px; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--area); opacity: .8; }
+  .block li b { color: var(--ink); font-weight: 600; }
+
+  .area-infra { --area: var(--infra); }
+  .area-offer { --area: var(--offer); }
+  .area-customer { --area: var(--customer); }
+  .area-finance { --area: var(--finance); }
+
+  /* Value prop is the hero block */
+  .vp { background: linear-gradient(168deg, color-mix(in srgb, var(--offer) 10%, var(--surface)), var(--surface)); border-color: color-mix(in srgb, var(--offer) 32%, var(--border)); }
+  .vp h3 { font-size: 16px; }
+  .vp .oneliner { font-family: var(--font-display); font-weight: 500; font-size: 14px; color: var(--brand); letter-spacing: -.01em; margin-top: 2px; }
+
+  .area-tag { margin-left: auto; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--area); }
+
+  /* ---- Section framing ---- */
+  .section { margin-top: 44px; }
+  .section > .eyebrow { display: block; }
+  .section h2 { font-size: clamp(20px, 2.6vw, 26px); font-weight: 500; margin: 6px 0 4px; }
+  .section .intro { color: var(--ink-soft); max-width: 66ch; font-size: 14.5px; margin-bottom: 20px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); }
+  .card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .card p { font-size: 13.5px; color: var(--ink-soft); }
+  .card .kbd { font-family: var(--font-display); }
+
+  .icp { border-left: 3px solid var(--customer); }
+  .wedge { border-left: 3px solid var(--offer); }
+  .wedge .quote { font-family: var(--font-display); font-weight: 400; font-size: 16px; letter-spacing: -.01em; color: var(--ink); line-height: 1.35; }
+
+  /* Roadmap */
+  .roadmap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; counter-reset: step; }
+  .phase { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: var(--shadow); position: relative; display: flex; flex-direction: column; gap: 7px; }
+  .phase .step { font-family: var(--font-display); font-weight: 600; font-size: 12px; color: var(--brand); }
+  .phase .when { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .phase h4 { font-size: 14.5px; font-weight: 600; }
+  .phase p { font-size: 12.8px; color: var(--ink-soft); }
+  .phase::after { content: ""; position: absolute; right: -8px; top: 42px; width: 16px; height: 2px; background: var(--border); z-index: 1; }
+  .phase:last-child::after { display: none; }
+
+  /* Pricing */
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .tier { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; position: relative; }
+  .tier.feature { border-color: color-mix(in srgb, var(--offer) 45%, var(--border)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--offer) 30%, transparent), var(--shadow); }
+  .tier .flag { position: absolute; top: -10px; right: 16px; background: var(--brand); color: #fff; font-size: 10.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; }
+  .tier .plan { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .tier .price { font-family: var(--font-display); font-weight: 600; font-size: 30px; letter-spacing: -.03em; color: var(--ink); }
+  .tier .price small { font-size: 13px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+  .tier .tag { font-size: 13px; color: var(--ink-soft); }
+  .tier ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+  .tier li { font-size: 12.8px; color: var(--ink-soft); padding-left: 20px; position: relative; }
+  .tier li::before { content: "✓"; position: absolute; left: 0; color: var(--customer); font-weight: 700; }
+
+  /* Metrics + loops */
+  .northstar { background: linear-gradient(150deg, #0b1120, #16213f); color: #fff; border-radius: 16px; padding: 22px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; }
+  .northstar .ns-label { font-size: 11.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #8fb0ff; }
+  .northstar .ns-metric { font-family: var(--font-display); font-weight: 500; font-size: clamp(20px, 3vw, 27px); letter-spacing: -.02em; margin-top: 4px; max-width: 20ch; }
+  .northstar .ns-side { display: flex; gap: 26px; flex-wrap: wrap; }
+  .northstar .ns-side div { font-size: 12px; color: rgba(255,255,255,.55); }
+  .northstar .ns-side b { display: block; font-family: var(--font-display); font-size: 17px; color: #fff; font-weight: 600; }
+
+  .loops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+  .loop { background: var(--surface-2); border: 1px dashed var(--border); border-radius: 14px; padding: 16px; }
+  .loop h4 { font-size: 13.5px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .loop .ico { width: 22px; height: 22px; border-radius: 7px; background: color-mix(in srgb, var(--brand) 15%, transparent); color: var(--brand); display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 12px; }
+  .loop p { font-size: 12.6px; color: var(--ink-soft); }
+
+  /* Competition table */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); }
+  table { width: 100%; border-collapse: collapse; min-width: 520px; background: var(--surface); }
+  th, td { text-align: left; padding: 12px 15px; font-size: 13px; border-bottom: 1px solid var(--border); }
+  thead th { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--surface-2); }
+  tbody td:first-child { color: var(--muted); font-weight: 500; }
+  td.us { color: var(--ink); font-weight: 600; }
+  td.us::before { content: "✓ "; color: var(--customer); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .moat { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .moat span { background: color-mix(in srgb, var(--offer) 10%, var(--surface)); border: 1px solid color-mix(in srgb, var(--offer) 25%, var(--border)); color: var(--ink-soft); border-radius: 999px; padding: 7px 14px; font-size: 12.5px; }
+  .moat span b { color: var(--ink); font-weight: 600; }
+
+  /* Product pillars */
+  .pillars { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .pillar { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 7px; }
+  .pillar .tag2 { align-self: flex-start; font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border-radius: 999px; padding: 2px 8px; }
+  .tag2.core { background: color-mix(in srgb, var(--offer) 13%, transparent); color: var(--offer); }
+  .tag2.new { background: color-mix(in srgb, var(--customer) 15%, transparent); color: var(--customer); }
+  .pillar h4 { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .pillar p { font-size: 12px; color: var(--ink-soft); line-height: 1.45; }
+  @media (max-width: 940px) { .pillars { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .pillars { grid-template-columns: 1fr; } }
+
+  footer { margin-top: 46px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--muted); }
+
+  @media (max-width: 940px) {
+    .bmc { grid-template-columns: 1fr 1fr; grid-template-areas: none; }
+    .bmc .block { grid-area: auto !important; }
+    .vp, .cost, .rev { grid-column: 1 / -1; }
+    .roadmap { grid-template-columns: 1fr 1fr; }
+    .phase::after { display: none; }
+  }
+  @media (max-width: 620px) {
+    .grid2, .tiers, .loops, .bmc, .roadmap { grid-template-columns: 1fr; }
+    .mast-meta { text-align: left; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .block, .card, .phase, .tier { transition: transform .18s ease, box-shadow .18s ease; }
+    .tier.feature:hover, .block.vp:hover { transform: translateY(-2px); }
+  }
+</style>
+
+<div class="wrap">
+
+  <!-- Masthead -->
+  <header class="mast">
+    <div class="brand">
+      <div class="logo">ह</div>
+      <div>
+        <b>Hisaab</b>
+        <span>The merchant money-brain built into Paytm</span>
+      </div>
+    </div>
+    <div class="mast-meta">
+      <b>Business Model Canvas</b> + Go-to-Market<br>
+      Merchant Growth AI · Build for India
+    </div>
+  </header>
+
+  <p class="eyebrow">One page, nine blocks</p>
+  <h1 class="lede">Turning India's <em>lost input tax credit</em> into a business.</h1>
+  <p class="sub">Hisaab reads a merchant's sales straight from Paytm's ledger, matches them to purchase invoices, recovers unclaimed ITC, and pre-fills GSTR-3B, reviewed by a human, spoken in the merchant's language. Then it goes beyond GST, business health, working capital, khata and compliance, the daily money brain for every merchant.</p>
+
+  <!-- Legend -->
+  <div class="legend">
+    <span><i class="dot" style="background:var(--infra)"></i> Infrastructure</span>
+    <span><i class="dot" style="background:var(--offer)"></i> Offering</span>
+    <span><i class="dot" style="background:var(--customer)"></i> Customer</span>
+    <span><i class="dot" style="background:var(--finance)"></i> Finances</span>
+  </div>
+
+  <!-- BUSINESS MODEL CANVAS -->
+  <section class="bmc">
+
+    <div class="block kp area-infra">
+      <div class="block-head"><span class="num">08</span><h3>Key Partnerships</h3></div>
+      <ul>
+        <li><b>Paytm</b>, platform, distribution & the sales ledger (anchor)</li>
+        <li><b>GSTN / GSP</b>, filing rails for GSTR-1 / 2B / 3B</li>
+        <li><b>Sarvam AI</b>, Indic speech & translation</li>
+        <li><b>LLM infra</b>, Groq, Gemini, Anthropic</li>
+        <li><b>Cognee</b>, knowledge-graph memory over books</li>
+        <li><b>CA networks & NBFCs</b>, reviewed filing + lending</li>
+      </ul>
+    </div>
+
+    <div class="block ka area-infra">
+      <div class="block-head"><span class="num">07</span><h3>Key Activities</h3></div>
+      <ul>
+        <li>Run & tune the 5-agent pipeline: <b>Intake → Classify → Cross-Check → Calculate → Generate</b></li>
+        <li>Maintain Paytm settlement + GSTN 2B integrations</li>
+        <li>Human-in-the-loop review operations</li>
+        <li>Encode changing GST rules & rates</li>
+      </ul>
+    </div>
+
+    <div class="block vp area-offer">
+      <div class="block-head"><span class="num">01</span><h3>Value Propositions</h3><span class="area-tag">Offering</span></div>
+      <ul>
+        <li><b>Zero manual entry</b>, sales read from Paytm, matched to invoices automatically</li>
+        <li><b>Catch every rupee of ITC</b>, 61–73% of MSMEs lose it to GSTR-2B mismatches</li>
+        <li><b>File-ready GSTR-3B</b>, pre-filled and human-reviewed before filing</li>
+        <li><b>Voice-first, in-language</b>, ask and answer out loud (Sarvam)</li>
+        <li>Cuts the <b>3–5% of revenue</b> MSMEs spend just staying compliant</li>
+        <li><b>Beyond GST</b>, know your profit, chase udhaar, stay compliant, and unlock working capital</li>
+      </ul>
+      <p class="oneliner">"Your GST, your books, your credit, sorted automatically."</p>
+    </div>
+
+    <div class="block cr area-customer">
+      <div class="block-head"><span class="num">04</span><h3>Customer Relationships</h3></div>
+      <ul>
+        <li>Automated self-service AI copilot + voice</li>
+        <li><b>Human-in-the-loop review</b>, the trust layer</li>
+        <li>Pro: CA-assisted, dedicated filing</li>
+        <li>Proactive WhatsApp / SMS nudges at filing time</li>
+      </ul>
+    </div>
+
+    <div class="block cs area-customer">
+      <div class="block-head"><span class="num">02</span><h3>Customer Segments</h3><span class="area-tag">Customer</span></div>
+      <ul>
+        <li><b>4.8 cr+ Paytm merchants</b>, GST-registered MSMEs above ₹40L (goods) / ₹20L (services)</li>
+        <li>Kirana, restaurants/QSR, retail & services, Tier 2/3, vernacular-first</li>
+        <li><b>Beachhead:</b> restock-heavy merchants with high ITC leakage</li>
+        <li><b>Widen the market:</b> profit & khata also serve the ~3.4 cr non-GST merchants</li>
+        <li>Paying tier: multi-GSTIN & CA-reviewed filing</li>
+        <li>Enabler-customer: <b>Paytm</b> (retention + lending); CAs as allies</li>
+      </ul>
+    </div>
+
+    <div class="block kr area-infra">
+      <div class="block-head"><span class="num">06</span><h3>Key Resources</h3></div>
+      <ul>
+        <li><b>Paytm's real-time sales ledger</b>, the wedge no one else has</li>
+        <li>Agentic AI pipeline + Indic voice stack</li>
+        <li>Reconciled books → a <b>lending-underwriting data asset</b></li>
+        <li>Business-health & credit engines on the same data</li>
+        <li>Paytm brand & trust; GSP licence</li>
+      </ul>
+    </div>
+
+    <div class="block ch area-customer">
+      <div class="block-head"><span class="num">03</span><h3>Channels</h3></div>
+      <ul>
+        <li><b>Embedded in the Paytm super-app</b> (zero-CAC)</li>
+        <li>Soundbox / EDC prompts; WhatsApp & SMS (n8n)</li>
+        <li>CA & tax-practitioner referrals</li>
+        <li>Field / tele for Pro conversion</li>
+      </ul>
+    </div>
+
+    <div class="block cost area-finance">
+      <div class="block-head"><span class="num">09</span><h3>Cost Structure</h3><span class="area-tag">Finances</span></div>
+      <ul>
+        <li><b>AI inference</b> (LLM + voice), variable per active merchant</li>
+        <li><b>Human review team</b>, the deliberate trust cost</li>
+        <li>GSP / GSTN fees, cloud & infrastructure</li>
+        <li>Compliance & legal upkeep</li>
+        <li><b>Value-driven</b> on an automated, low-marginal-cost base → scales with volume</li>
+      </ul>
+    </div>
+
+    <div class="block rev area-finance">
+      <div class="block-head"><span class="num">05</span><h3>Revenue Streams</h3><span class="area-tag">Finances</span></div>
+      <ul>
+        <li><b>Free copilot</b>, the adoption & data engine</li>
+        <li><b>Pro subscription</b>, CA-reviewed filing, multi-GSTIN, priority (₹199–₹999/mo)</li>
+        <li><b>Credit take-rate</b>, revenue share on working-capital loans (the real engine)</li>
+        <li>Per-filing fee (₹99–₹299)</li>
+        <li>Later: CA-marketplace take-rate</li>
+      </ul>
+    </div>
+
+  </section>
+
+  <!-- PRODUCT PILLARS -->
+  <section class="section">
+    <p class="eyebrow">The product</p>
+    <h2>GST is the wedge. The money brain is the product.</h2>
+    <p class="intro">A merchant opens Hisaab for free ITC recovery, then stays for the things they think about every day, profit, cash, credit and compliance. The daily pillars widen use from monthly filing to everyday, and the market from GST-registered to all merchants.</p>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="tag2 core">Core</span>
+        <h4>GST copilot</h4>
+        <p>Auto-reconcile sales to invoices, catch unclaimed ITC, file-ready GSTR-3B, human-reviewed.</p>
+      </div>
+      <div class="pillar">
+        <span class="tag2 new">New</span>
+        <h4>Business Health</h4>
+        <p>A 0–100 growth score with profit and cash trends, from the same data. Serves non-GST merchants too.</p>
+      </div>
+      <div class="pillar">
+        <span class="tag2 new">New</span>
+        <h4>Working Capital</h4>
+        <p>Clean, verified books become a pre-approved loan offer. Better books, better rate.</p>
+      </div>
+      <div class="pillar">
+        <span class="tag2 new">New</span>
+        <h4>Khata</h4>
+        <p>Digital udhaar and dues with one-tap WhatsApp reminders, so cash stops getting stuck.</p>
+      </div>
+      <div class="pillar">
+        <span class="tag2 new">New</span>
+        <h4>Compliance</h4>
+        <p>Every deadline in one calendar, plus an AI that explains any GST notice and the next steps.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GO TO MARKET -->
+  <section class="section">
+    <p class="eyebrow">Go-to-market</p>
+    <h2>Land free, prove the rupees, then monetize.</h2>
+    <p class="intro">Hisaab starts from an unfair advantage, the sales side is already inside Paytm. The wedge is showing a merchant money they're losing today, at zero cost, then earning the paid relationship.</p>
+
+    <div class="grid2">
+      <div class="card icp">
+        <h3>Ideal customer profile</h3>
+        <p>A <b>GST-registered Paytm merchant</b>, ₹40L–₹5Cr turnover, Tier 2/3 city, Hindi/regional-first, who is <b>already paying a CA</b> or quietly <b>losing ITC every month</b> to unmatched supplier invoices.</p>
+      </div>
+      <div class="card wedge">
+        <h3>The wedge</h3>
+        <p class="quote">"We already see your sales. Add your purchases and we'll show you the input tax credit you're losing, free. Then file in minutes."</p>
+      </div>
+    </div>
+
+    <div class="roadmap" style="margin-top:14px">
+      <div class="phase">
+        <span class="when">0–3 months</span>
+        <span class="step">Phase 1</span>
+        <h4>Pilot</h4>
+        <p>One merchant cluster / mandi. Prove ITC recovered and hours saved. Hackathon build → design partners.</p>
+      </div>
+      <div class="phase">
+        <span class="when">3–9 months</span>
+        <span class="step">Phase 2</span>
+        <h4>In-app rollout</h4>
+        <p>Target high-ITC merchants inside Paytm. Voice onboarding; filing-time nudges over WhatsApp.</p>
+      </div>
+      <div class="phase">
+        <span class="when">9–18 months</span>
+        <span class="step">Phase 3</span>
+        <h4>Monetize</h4>
+        <p>Pro tier + CA marketplace; multi-GSTIN. Pipe reconciled data into Paytm's lending underwriting.</p>
+      </div>
+      <div class="phase">
+        <span class="when">18 months +</span>
+        <span class="step">Phase 4</span>
+        <h4>Platform</h4>
+        <p>Become the default GST layer for all 4.8 cr merchants, the compliance rail of the super-app.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section">
+    <p class="eyebrow">Pricing</p>
+    <h2>Free forever to adopt. Pay for peace of mind.</h2>
+    <p class="intro">The copilot is free so every merchant connects their books, that adoption is the moat and the data. Revenue comes from removing the last worry: getting it filed, correctly.</p>
+    <div class="tiers">
+      <div class="tier">
+        <span class="plan">Copilot</span>
+        <div class="price tnum">₹0<small> / forever</small></div>
+        <p class="tag">Everything a merchant needs to see the truth.</p>
+        <ul>
+          <li>Auto-reconcile Paytm sales ↔ invoices</li>
+          <li>Unclaimed-ITC alerts</li>
+          <li>GSTR-3B draft (self-file)</li>
+          <li>Voice assistant, in-language</li>
+        </ul>
+      </div>
+      <div class="tier feature">
+        <span class="flag">Most popular</span>
+        <span class="plan">Pro · CA-reviewed</span>
+        <div class="price tnum">₹499<small> / mo</small></div>
+        <p class="tag">A chartered accountant reviews and files for you.</p>
+        <ul>
+          <li>Everything in Copilot</li>
+          <li>CA review before every filing</li>
+          <li>Filed on your behalf, on time</li>
+          <li>Priority vernacular support</li>
+          <li>or ₹299 per single filing</li>
+        </ul>
+      </div>
+      <div class="tier">
+        <span class="plan">Pro · Self-file</span>
+        <div class="price tnum">₹199<small> / mo</small></div>
+        <p class="tag">For confident, multi-outlet merchants.</p>
+        <ul>
+          <li>Everything in Copilot</li>
+          <li>Multiple GSTINs</li>
+          <li>Unlimited history & exports</li>
+          <li>Priority processing</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- METRICS + LOOPS -->
+  <section class="section">
+    <p class="eyebrow">Traction model</p>
+    <h2>One number to steer by, three loops that compound.</h2>
+    <div class="northstar" style="margin-top:6px">
+      <div>
+        <div class="ns-label">North-star metric</div>
+        <div class="ns-metric">₹ Input tax credit recovered, per merchant, per month.</div>
+      </div>
+      <div class="ns-side">
+        <div><b>Activation</b> purchases connected</div>
+        <div><b>Completion</b> returns filed</div>
+        <div><b>Conversion</b> free → Pro</div>
+        <div><b>CAC ≈ ₹0</b> in-app distribution</div>
+      </div>
+    </div>
+    <div class="loops">
+      <div class="loop">
+        <h4><span class="ico">A</span> Proof loop</h4>
+        <p>Recovered ITC is a number a merchant can feel → word of mouth spreads inside tight merchant clusters.</p>
+      </div>
+      <div class="loop">
+        <h4><span class="ico">B</span> Lending flywheel</h4>
+        <p>Reconciled books → better Paytm underwriting → credit for the merchant → stickier account → more data.</p>
+      </div>
+      <div class="loop">
+        <h4><span class="ico">C</span> Partner loop</h4>
+        <p>CAs bring their client books onto Hisaab; the marketplace makes them more productive, they bring more.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPETITION + MOAT -->
+  <section class="section">
+    <p class="eyebrow">Why we win</p>
+    <h2>Built different, not just better.</h2>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Dimension</th><th>Existing tools <span style="font-weight:400;text-transform:none;letter-spacing:0">(ClearTax, Zoho, Vyapar, Tally)</span></th><th>Hisaab</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Data entry</td><td>Manual, every invoice</td><td class="us">Automatic, zero entry</td></tr>
+          <tr><td>Where it lives</td><td>A separate app to remember</td><td class="us">Inside the Paytm app</td></tr>
+          <tr><td>Sales data</td><td>Re-entered by hand</td><td class="us">Read live from Paytm's ledger</td></tr>
+          <tr><td>Update speed</td><td>Monthly, at filing time</td><td class="us">Real-time, every settlement</td></tr>
+          <tr><td>Language</td><td>English-first forms</td><td class="us">Voice-first, in Indic languages</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="moat">
+      <span><b>Owns the ledger</b>, only Paytm sees the sales side</span>
+      <span><b>Already the default</b>, 4.8 cr merchants, daily</span>
+      <span><b>Data → credit</b>, clean books feed lending</span>
+      <span><b>Trust</b>, human-reviewed, never blind-filed</span>
+    </div>
+  </section>
+
+  <footer>
+    <span>Hisaab · Business Model Canvas &amp; GTM</span>
+    <span>Not tax advice · every return is a human-reviewed draft</span>
+  </footer>
+
+</div>

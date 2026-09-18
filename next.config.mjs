@@ -8,6 +8,10 @@ const nextConfig = {
     // Do not fail production builds on lint; we run lint separately in CI.
     ignoreDuringBuilds: true,
   },
+  async rewrites() {
+    // Clean URL for the Business Model Canvas one-pager (served from public/).
+    return [{ source: "/bmc", destination: "/bmc.html" }];
+  },
 };
 
 export default nextConfig;
