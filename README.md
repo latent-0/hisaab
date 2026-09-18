@@ -125,6 +125,16 @@ schema moves to Postgres by changing one `provider` line.
 
 ---
 
+## Deploy free on Render (no billing)
+
+The repo ships a `render.yaml` Blueprint. In [Render](https://render.com):
+**New → Blueprint** → connect `github.com/latent-0/hisaab` → Apply. Render builds
+the Dockerfile and starts a free web service. Then open the service's
+**Environment** tab and set the secret keys: `GROQ_API_KEY`, `SARVAM_API_KEY`,
+`COGNEE_API_BASE`, `COGNEE_API_KEY`, `COGNEE_TENANT_ID`, `AUTOMATION_TOKEN`.
+Health check is `/api/health`. (Free instances sleep after ~15 min idle and cold-start
+on the next request; SQLite reseeds on cold start — fine for a demo.)
+
 ## Deploy to Google Cloud Run
 
 The default image is self-contained (SQLite + seed on boot) — great for a live
