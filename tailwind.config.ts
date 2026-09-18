@@ -6,19 +6,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Paytm-adjacent blue as the brand anchor, with a fintech-clean palette.
+        // Paytm-flavoured: navy primary (#002970) with cyan (#00BAF2) at the
+        // light end for accents that pop on dark surfaces.
         brand: {
-          50: "#eef4ff",
-          100: "#dbe7ff",
-          200: "#bcd2ff",
-          300: "#8db4ff",
-          400: "#588bff",
-          500: "#2f63f6",
-          600: "#1a48e0",
-          700: "#1638b6",
-          800: "#183196",
-          900: "#1a2f77",
-          950: "#141d47",
+          50: "#e6f4fd",
+          100: "#cfe9fb",
+          200: "#a6d8f7",
+          300: "#4fb9ef",
+          400: "#14a4e8",
+          500: "#0a63b0",
+          600: "#002970",
+          700: "#001f57",
+          800: "#001a49",
+          900: "#00133a",
+          950: "#000b24",
+        },
+        // Paytm cyan accent, available as `accent-*`.
+        accent: {
+          DEFAULT: "#00BAF2",
+          soft: "#e6f7fe",
+           600: "#009fe0",
         },
         ink: {
           DEFAULT: "#0b1120",

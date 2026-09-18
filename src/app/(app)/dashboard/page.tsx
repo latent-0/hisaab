@@ -112,8 +112,8 @@ export default async function DashboardPage() {
 
       {/* The moment that sells it */}
       <div className="grid gap-4 lg:grid-cols-3">
-        <div className="relative overflow-hidden rounded-2xl bg-ink p-6 text-white lg:col-span-2">
-          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand-500/30 blur-3xl" />
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-700 via-brand-600 to-brand-500 p-6 text-white lg:col-span-2">
+          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-accent/40 blur-3xl" />
           <div className="relative">
             <p className="flex items-center gap-2 text-sm text-white/60">
               <Sparkles className="h-4 w-4 text-brand-300" /> This month
