@@ -1,0 +1,178 @@
+// Hisaab data model.
+//
+// Notes on portability: we use SQLite for local dev (zero setup). To keep the
+// schema identical when moving to Postgres on Cloud Run, we avoid DB-native
+// enums and Json columns — "enum-like" fields are Strings validated in app code
+// (see src/lib/constants.ts) and structured payloads are stored as JSON strings.
+// To go to Postgres: change `provider` to "postgresql" and set DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Merchant {
+  id           String   @id @default(cuid())
+  businessName String
+  ownerName    String
+  gstin        String   @unique
+  stateCode    String // GST state code, e.g. "27" (Maharashtra)
+  stateName    String
+  phone        String   @unique
+  email        String?
+  language     String   @default("en") // en | hi | ta | te | kn | mr | bn ...
+  planTier     String   @default("free") // free | pro
+  cogneeSyncedAt DateTime? // last time this merchant's GST knowledge was pushed to Cognee
+  createdAt    DateTime @default(now())
+
+  sales     SalesTransaction[]
+  purchases PurchaseInvoice[]
+  returns   GstReturn[]
+  reviews   ReviewTask[]
+  runs      AgentRun[]
+  voice     VoiceQuery[]
+}
+
+// Sales come from Paytm settlements (QR / Soundbox / EDC). In dev they are
+// produced by the sandbox adapter (src/lib/adapters/paytm.ts).
+model SalesTransaction {
+  id           String   @id @default(cuid())
+  merchantId   String
+  merchant     Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  paytmTxnId   String   @unique
+  channel      String // qr | soundbox | edc
+  grossAmount  Float // amount paid by customer (incl. GST)
+  taxableValue Float
+  gstRate      Float // 0 | 5 | 12 | 18 | 28
+  cgst         Float
+  sgst         Float
+  igst         Float
+  hsnCode      String?
+  category     String?
+  settledAt    DateTime
+  period       String // "YYYY-MM" for fast filing-period queries
+  createdAt    DateTime @default(now())
+
+  @@index([merchantId, period])
+}
+
+// A purchase invoice a merchant received from a supplier. Input Tax Credit
+// (ITC) is claimed against these. They flow through the 5-agent pipeline.
+model PurchaseInvoice {
+  id            String   @id @default(cuid())
+  merchantId    String
+  merchant      Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  // Raw intake
+  fileUrl       String?
+  fileName      String?
+  ocrText       String? // raw extracted text (from OCR provider)
+  source        String   @default("upload") // upload | manual | email | sandbox
+
+  // Structured fields (populated by Intake agent)
+  supplierName  String?
+  supplierGstin String?
+  invoiceNo     String?
+  invoiceDate   DateTime?
+  taxableValue  Float?
+  cgst          Float    @default(0)
+  sgst          Float    @default(0)
+  igst          Float    @default(0)
+  total         Float?
+  hsnCode       String?
+  gstRate       Float?
+
+  // Classification (Classify agent)
+  category      String? // e.g. "raw_materials", "capital_goods", "rent", "telecom"
+  itcEligible   Boolean? // eligible for input tax credit?
+  itcBlockReason String? // Sec 17(5) block reason if ineligible
+
+  // Cross-check (Cross-Check agent) — GSTR-2B reconciliation
+  gstr2bStatus  String   @default("unknown") // matched | mismatch | missing | unknown
+  matchNotes    String?
+
+  // Lifecycle
+  status        String   @default("received") // received | processing | needs_review | approved | rejected
+  confidence    Float    @default(0) // 0..1 model confidence for the whole invoice
+  period        String? // filing period "YYYY-MM" (from invoiceDate)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  reviews ReviewTask[]
+
+  @@index([merchantId, status])
+  @@index([merchantId, period])
+}
+
+// A drafted GST return (GSTR-3B) for a filing period.
+model GstReturn {
+  id          String   @id @default(cuid())
+  merchantId  String
+  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  period      String // "YYYY-MM"
+  type        String   @default("GSTR3B")
+  status      String   @default("draft") // draft | reviewed | filed
+  // Full computed return payload as JSON string (see GstReturnData type).
+  data        String
+  outputTax   Float    @default(0)
+  itcClaimed  Float    @default(0)
+  netPayable  Float    @default(0)
+  generatedAt DateTime @default(now())
+  reviewedAt  DateTime?
+  filedAt     DateTime?
+
+  @@unique([merchantId, period, type])
+}
+
+// Human-in-the-loop queue: anything the model is unsure about lands here.
+model ReviewTask {
+  id          String   @id @default(cuid())
+  merchantId  String
+  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  invoiceId   String?
+  invoice     PurchaseInvoice? @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  kind        String // low_confidence | gstr2b_mismatch | itc_blocked | missing_gstin | duplicate
+  severity    String   @default("medium") // low | medium | high
+  title       String
+  detail      String
+  suggestion  String?
+  status      String   @default("open") // open | resolved | dismissed
+  resolvedBy  String?
+  createdAt   DateTime @default(now())
+  resolvedAt  DateTime?
+
+  @@index([merchantId, status])
+}
+
+// Observability for a pipeline execution over one invoice (or a batch).
+model AgentRun {
+  id         String   @id @default(cuid())
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  invoiceId  String?
+  status     String   @default("running") // running | completed | failed
+  provider   String // which LLM provider was used
+  // Array of step results as JSON string (see AgentStepTrace[]).
+  steps      String   @default("[]")
+  startedAt  DateTime @default(now())
+  finishedAt DateTime?
+
+  @@index([merchantId])
+}
+
+// Voice queries ("How much GST did I save this month?") and their answers.
+model VoiceQuery {
+  id         String   @id @default(cuid())
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  language   String   @default("en")
+  transcript String
+  intent     String?
+  answerText String
+  createdAt  DateTime @default(now())
+}
