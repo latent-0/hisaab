@@ -6,6 +6,7 @@ import {
   Building2,
   Bus,
   Calculator,
+  Check,
   ChevronDown,
   CreditCard,
   Download,
@@ -21,7 +22,6 @@ import {
   ScanLine,
   Shield,
   Smartphone,
-  Sparkles,
   Store,
   TrainFront,
   Umbrella,
@@ -131,58 +131,85 @@ export default function PaytmV2() {
         {/* ===== Paytm Travel ===== */}
         <TravelWidget onSearch={demo} />
 
-        {/* ===== HISAAB integration spotlight ===== */}
-        <section
-          className="relative overflow-hidden rounded-2xl p-6 text-white sm:p-8"
-          style={{ background: `linear-gradient(120deg, ${NAVY} 0%, #123a86 55%, #0a6fb0 100%)` }}
-        >
-          <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full" style={{ background: CYAN, opacity: 0.25, filter: "blur(70px)" }} />
-          <div className="relative grid items-center gap-8 lg:grid-cols-[1.1fr_.9fr]">
-            <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-wide">
-                <Sparkles className="h-3.5 w-3.5" /> New for GST-registered merchants
-              </span>
-              <div className="mt-4 flex items-center gap-3">
-                <div className="grid h-11 w-11 place-items-center rounded-xl bg-white/15 text-2xl font-bold">ह</div>
-                <div>
-                  <p className="text-2xl font-extrabold leading-none">Hisaab</p>
-                  <p className="text-sm text-white/70">GST copilot, inside Paytm</p>
-                </div>
+        {/* ===== Meet Hisaab — feature spotlight (product-in-phone) ===== */}
+        <section className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_1px_2px_rgba(16,24,40,.04),0_10px_30px_rgba(16,24,40,.05)]">
+          <div className="grid lg:grid-cols-[1.05fr_.95fr]">
+            {/* Copy */}
+            <div className="p-7 sm:p-10">
+              <div className="flex items-center gap-2.5">
+                <span className="grid h-9 w-9 place-items-center rounded-xl text-lg font-bold text-white" style={{ background: NAVY }}>ह</span>
+                <span className="text-sm font-extrabold" style={{ color: NAVY }}>Hisaab</span>
+                <span className="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold text-white">NEW</span>
               </div>
-              <h3 className="mt-5 max-w-xl text-3xl font-extrabold leading-[1.1] tracking-tight sm:text-[2.4rem]">
-                Your GST, sorted automatically.
-              </h3>
-              <p className="mt-3 max-w-lg text-white/75">
-                Hisaab reads your Paytm sales, matches them to purchase invoices, catches every unclaimed
-                rupee of input tax credit, and pre-fills GSTR-3B. Reviewed by a human, spoken in your language.
+              <h2 className="mt-6 text-[2.4rem] font-extrabold leading-[1.03] tracking-tight text-[#0f1a2e] sm:text-[2.9rem]">
+                Your GST,<br />sorted <span style={{ color: CYAN }}>automatically</span>.
+              </h2>
+              <p className="mt-4 max-w-md text-[15px] leading-relaxed text-[#41506b]">
+                The sales side is already in Paytm. Hisaab adds the rest — reads your invoices, catches every
+                unclaimed rupee of input tax credit, and files a ready GSTR-3B.
               </p>
-              <div className="mt-6 flex flex-wrap items-center gap-3">
-                <a href="/v2/open-hisaab" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#002970] transition hover:bg-white/90">
+              <ul className="mt-6 space-y-3">
+                {[
+                  "Zero manual entry — reads your settlements",
+                  "Catches every rupee of input tax credit",
+                  "File-ready GSTR-3B, reviewed by a human",
+                ].map((b) => (
+                  <li key={b} className="flex items-center gap-3 text-sm font-medium text-[#1a2b4a]">
+                    <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full" style={{ background: "#e6f7fe", color: NAVY }}>
+                      <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                    </span>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <a href="/v2/open-hisaab" className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold text-white shadow-sm transition hover:brightness-110" style={{ background: NAVY }}>
                   Open Hisaab <ArrowRight className="h-4 w-4" />
                 </a>
-                <span className="inline-flex items-center gap-2 text-sm text-white/60">
-                  <Mic className="h-4 w-4" /> "इस महीने कितना GST बचा?"
+                <span className="inline-flex items-center gap-2 text-sm text-[#5a6b86]">
+                  <Mic className="h-4 w-4" style={{ color: NAVY }} /> "इस महीने कितना GST बचा?"
                 </span>
               </div>
             </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur">
-              <div className="flex items-center justify-between text-xs text-white/60">
-                <span className="inline-flex items-center gap-1.5"><Store className="h-3.5 w-3.5" /> Sharma General Store</span>
-                <span className="inline-flex items-center gap-1.5"><i className="h-2 w-2 rounded-full bg-emerald-400" /> Live</span>
-              </div>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-white/50">Unclaimed input tax credit</p>
-              <p className="text-5xl font-extrabold tracking-tight">₹4,120</p>
-              <div className="mt-4 flex items-center gap-2 rounded-xl border border-amber-300/30 bg-amber-300/10 px-3 py-2 text-sm">
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-amber-300/25 text-xs font-bold text-amber-200">2</span>
-                invoices flagged for review
-              </div>
-              <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                {[["Sales", "₹1.68L"], ["ITC", "₹16,626"], ["Net", "₹2,432"]].map(([k, v]) => (
-                  <div key={k} className="rounded-lg border border-white/10 bg-white/5 px-2 py-2">
-                    <p className="text-[10px] text-white/50">{k}</p>
-                    <p className="text-sm font-bold">{v}</p>
+
+            {/* Product screen inside a phone */}
+            <div className="relative flex justify-center overflow-hidden pt-9" style={{ background: "linear-gradient(160deg,#e9f1ff,#d7e6ff)" }}>
+              <div className="w-[248px] rounded-t-[2.2rem] border-[10px] border-b-0 border-[#0f1a2e] bg-[#f4f7fc] px-2.5 pt-2 shadow-2xl">
+                <div className="mx-auto mb-2 h-1.5 w-14 rounded-full bg-[#0f1a2e]/15" />
+                <div className="flex items-center justify-between px-1 pb-2">
+                  <span className="flex items-center gap-1.5 text-[13px] font-extrabold" style={{ color: NAVY }}>
+                    <span className="grid h-5 w-5 place-items-center rounded-md text-[10px] text-white" style={{ background: NAVY }}>ह</span> Hisaab
+                  </span>
+                  <span className="text-[10px] text-[#8a97b2]">Sept 2026</span>
+                </div>
+                <div className="rounded-2xl p-4 text-white" style={{ background: `linear-gradient(145deg, ${NAVY}, #0a63b0)` }}>
+                  <p className="text-[9px] font-semibold uppercase tracking-wide text-white/60">Unclaimed ITC · this month</p>
+                  <p className="text-[34px] font-extrabold leading-none">₹4,120</p>
+                  <div className="mt-3 flex items-center gap-2 rounded-lg bg-white/10 px-2 py-1.5 text-[11px]">
+                    <span className="grid h-4 w-4 place-items-center rounded-full bg-amber-300 text-[9px] font-bold text-[#7a4d00]">2</span>
+                    invoices flagged
                   </div>
-                ))}
+                </div>
+                <div className="mt-2 grid grid-cols-3 gap-1.5">
+                  {[["Sales", "₹1.68L"], ["ITC", "₹16.6k"], ["Net", "₹2,432"]].map(([k, v]) => (
+                    <div key={k} className="rounded-lg border border-black/5 bg-white px-1 py-1.5 text-center">
+                      <p className="text-[8px] text-[#8a97b2]">{k}</p>
+                      <p className="text-[11px] font-bold text-[#0f1a2e]">{v}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-2 space-y-1.5 pb-5">
+                  {[["Metro Cash & Carry", "ok"], ["Bharti Airtel", "ok"], ["Blue Dart Express", "flag"]].map(([n, s]) => (
+                    <div key={n} className="flex items-center justify-between rounded-lg bg-white px-2 py-1.5">
+                      <span className="truncate text-[10px] font-medium text-[#1a2b4a]">{n}</span>
+                      {s === "flag" ? (
+                        <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[8px] font-bold text-[#a9760a]">review</span>
+                      ) : (
+                        <Check className="h-3 w-3 text-emerald-500" strokeWidth={3} />
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

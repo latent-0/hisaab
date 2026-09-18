@@ -1,10 +1,13 @@
 import Link from "next/link";
 import {
+  Activity,
   AlertTriangle,
   ArrowRight,
+  Banknote,
   CalendarClock,
   IndianRupee,
   Mic,
+  NotebookPen,
   RefreshCw,
   Sparkles,
   TrendingUp,
@@ -12,6 +15,8 @@ import {
 } from "lucide-react";
 import { getCurrentMerchant } from "@/lib/session";
 import { buildReturnData, computeDashboardStats } from "@/lib/returns";
+import { getBusinessHealth } from "@/lib/growth";
+import { getCreditOffer } from "@/lib/credit";
 import { prisma } from "@/lib/db";
 import { SalesTrendChart, TaxSplitChart } from "@/components/Charts";
 import { PipelineDiagram } from "@/components/PipelineDiagram";
@@ -41,13 +46,24 @@ function prevPeriods(n: number): string[] {
 export default async function DashboardPage() {
   const merchant = (await getCurrentMerchant())!;
   const period = currentPeriod();
-  const [stats, returnData, gstReturn] = await Promise.all([
+  const [stats, returnData, gstReturn, health, offer, receivables] = await Promise.all([
     computeDashboardStats(merchant.id, period),
     buildReturnData(merchant.id, period),
     prisma.gstReturn.findUnique({
       where: { merchantId_period_type: { merchantId: merchant.id, period, type: "GSTR3B" } },
     }),
+    getBusinessHealth(merchant.id),
+    getCreditOffer(merchant.id),
+    prisma.ledgerEntry.findMany({
+      where: { merchantId: merchant.id, kind: "receivable", status: "open" },
+      select: { amount: true, dueDate: true },
+    }),
   ]);
+  const nowMs = Date.now();
+  const overdueUdhaar = receivables
+    .filter((r) => r.dueDate && r.dueDate.getTime() < nowMs)
+    .reduce((a, r) => a + r.amount, 0);
+  const overdueCount = receivables.filter((r) => r.dueDate && r.dueDate.getTime() < nowMs).length;
 
   // Trend across the last 3 periods.
   const periods = prevPeriods(3);
@@ -166,6 +182,48 @@ export default async function DashboardPage() {
             Review & file <ArrowRight className="h-4 w-4" />
           </LinkButton>
         </Card>
+      </div>
+
+      {/* Grow your business strip */}
+      <div>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-ink">Grow your business</h2>
+          <span className="text-xs text-ink-muted">Beyond GST — your money brain</span>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Link href="/health" className="card group p-5 transition hover:border-brand-300 hover:shadow-pop">
+            <div className="flex items-center justify-between">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><Activity className="h-5 w-5" /></span>
+              <ArrowRight className="h-4 w-4 text-ink-muted transition group-hover:translate-x-0.5 group-hover:text-brand-600" />
+            </div>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-ink-muted">Business health</p>
+            <p className="tnum mt-1 text-2xl font-bold text-ink">{health.growthScore}<span className="text-base font-normal text-ink-muted">/100</span></p>
+            <p className="text-xs text-ink-muted">growth score · ~{health.marginPct}% margin</p>
+          </Link>
+
+          <Link href="/credit" className="card group relative overflow-hidden bg-gradient-to-br from-brand-700 via-brand-600 to-brand-500 p-5 text-white transition hover:shadow-pop">
+            <div className="pointer-events-none absolute -right-10 -top-12 h-32 w-32 rounded-full bg-accent/40 blur-2xl" />
+            <div className="relative">
+              <div className="flex items-center justify-between">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15"><Banknote className="h-5 w-5" /></span>
+                <ArrowRight className="h-4 w-4 text-white/70 transition group-hover:translate-x-0.5 group-hover:text-white" />
+              </div>
+              <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-white/60">{offer.eligible ? "Pre-approved" : "Working capital"}</p>
+              <p className="tnum mt-1 text-2xl font-bold">{inr(offer.amount)}</p>
+              <p className="text-xs text-white/70">working capital, from your books</p>
+            </div>
+          </Link>
+
+          <Link href="/khata" className="card group p-5 transition hover:border-brand-300 hover:shadow-pop">
+            <div className="flex items-center justify-between">
+              <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${overdueUdhaar > 0 ? "bg-warning/15 text-[#a9760a]" : "bg-success/15 text-success"}`}><NotebookPen className="h-5 w-5" /></span>
+              <ArrowRight className="h-4 w-4 text-ink-muted transition group-hover:translate-x-0.5 group-hover:text-brand-600" />
+            </div>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-ink-muted">Khata · udhaar</p>
+            <p className={`tnum mt-1 text-2xl font-bold ${overdueUdhaar > 0 ? "text-[#b47905]" : "text-ink"}`}>{inr(overdueUdhaar)}</p>
+            <p className="text-xs text-ink-muted">{overdueUdhaar > 0 ? `overdue from ${overdueCount} customer${overdueCount > 1 ? "s" : ""}` : "nothing overdue"}</p>
+          </Link>
+        </div>
       </div>
 
       {/* KPI row */}
