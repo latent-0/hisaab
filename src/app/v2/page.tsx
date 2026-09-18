@@ -20,7 +20,6 @@ import {
   Satellite,
   ScanLine,
   Shield,
-  ShieldCheck,
   Smartphone,
   Sparkles,
   Store,
@@ -222,11 +221,7 @@ export default function PaytmV2() {
                 <span key={b} className="rounded-lg border border-black/10 bg-white px-3 py-2 text-[11px] font-bold text-[#41506b] shadow-sm">{b}</span>
               ))}
             </div>
-            <div className="relative mt-6 h-24">
-              <CardArt className="absolute left-2 top-2 rotate-[-8deg]" from="#0f1729" to="#334155" label="kotak" />
-              <CardArt className="absolute left-24 top-1 rotate-[-2deg]" from="#0ea5e9" to="#0369a1" label="IndianOil" />
-              <CardArt className="absolute left-44 top-0 rotate-[6deg]" from="#7f1d1d" to="#b91c1c" label="HDFC BANK" />
-            </div>
+            <img src="/img/cards.png" alt="Paytm co-branded RuPay credit cards" className="mt-6 w-full max-w-[420px]" />
           </section>
 
           <section className="overflow-hidden rounded-2xl bg-gradient-to-b from-[#e9f6ff] to-[#f4fbff] p-6">
@@ -237,10 +232,7 @@ export default function PaytmV2() {
             <h3 className="mt-4 text-3xl font-extrabold leading-[1.1] tracking-tight">Insurance ka<br /><span style={{ color: CYAN }}>Super Market</span></h3>
             <p className="mt-3 max-w-sm text-sm text-[#41506b]">A Smart, Simple &amp; Transparent Platform to Explore &amp; Purchase Insurance.</p>
             <button onClick={demo} className="mt-5 inline-flex items-center gap-1.5 rounded-full border-2 px-4 py-2 text-sm font-bold" style={{ borderColor: NAVY, color: NAVY }}>Get It Now <ArrowRight className="h-4 w-4" /></button>
-            <div className="mt-6 flex items-end justify-end gap-3">
-              <span className="text-5xl">👨‍👩‍👦</span>
-              <ShieldCheck className="h-14 w-14 text-emerald-500" fill="#d1fae5" />
-            </div>
+            <img src="/img/family.png" alt="An insured Indian family" className="mt-4 ml-auto w-full max-w-[320px]" />
           </section>
         </div>
 
@@ -339,16 +331,6 @@ function PhoneMock({ children }: { children: React.ReactNode }) {
     <div className="ml-auto w-[150px] rounded-t-2xl border-4 border-b-0 border-[#0f1a2e] bg-white p-2 shadow-xl">
       <div className="mb-2 flex items-center"><span className="text-[9px] font-extrabold" style={{ color: NAVY }}>Pay<span style={{ color: CYAN }}>tm</span></span></div>
       {children}
-    </div>
-  );
-}
-
-function CardArt({ className = "", from, to, label }: { className?: string; from: string; to: string; label: string }) {
-  return (
-    <div className={`h-28 w-44 rounded-xl p-3 text-white shadow-xl ${className}`} style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}>
-      <div className="flex justify-between text-[10px] font-bold opacity-80"><span>{label}</span><span>RuPay</span></div>
-      <div className="mt-3 h-4 w-6 rounded bg-yellow-300/80" />
-      <div className="mt-3 text-[11px] tracking-widest opacity-90">•••• •••• •••• 6411</div>
     </div>
   );
 }
