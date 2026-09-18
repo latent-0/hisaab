@@ -1,0 +1,110 @@
+{
+  "name": "Hisaab — GSTR-3B Filing Reminders",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 15,18 * *"
+            }
+          ]
+        }
+      },
+      "id": "trigger-reminder",
+      "name": "15th & 18th at 9am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.HISAAB_URL }}/api/automation/reminders",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.HISAAB_AUTOMATION_TOKEN }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-reminders",
+      "name": "Fetch pending filings",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "reminders",
+        "options": {}
+      },
+      "id": "split-reminders",
+      "name": "One item per merchant",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.daysLeft }}",
+              "rightValue": 7,
+              "operator": { "type": "number", "operation": "lte" }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "if-due-soon",
+      "name": "Due within 7 days?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [960, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"text\": {{ JSON.stringify($json.message) }} }",
+        "options": {}
+      },
+      "id": "notify-slack",
+      "name": "Send reminder (Slack webhook)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1220, 220]
+    }
+  ],
+  "connections": {
+    "15th & 18th at 9am": {
+      "main": [[{ "node": "Fetch pending filings", "type": "main", "index": 0 }]]
+    },
+    "Fetch pending filings": {
+      "main": [[{ "node": "One item per merchant", "type": "main", "index": 0 }]]
+    },
+    "One item per merchant": {
+      "main": [[{ "node": "Due within 7 days?", "type": "main", "index": 0 }]]
+    },
+    "Due within 7 days?": {
+      "main": [[{ "node": "Send reminder (Slack webhook)", "type": "main", "index": 0 }], []]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "pinData": {},
+  "meta": {
+    "description": "Twice near the deadline, fetches each merchant's unfiled GSTR-3B status and, when due within 7 days, sends a localized reminder. Swap the Slack webhook node for WhatsApp Business / email as needed. Env vars: HISAAB_URL, HISAAB_AUTOMATION_TOKEN, SLACK_WEBHOOK_URL."
+  }
+}

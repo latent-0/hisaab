@@ -1,0 +1,58 @@
+{
+  "name": "Hisaab — Daily Paytm Settlement Sync",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "triggerAtHour": 6,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "trigger-daily",
+      "name": "Every day at 6am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.HISAAB_URL }}/api/automation/sync",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.HISAAB_AUTOMATION_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={}",
+        "options": {}
+      },
+      "id": "http-sync",
+      "name": "Sync all merchants",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 300]
+    }
+  ],
+  "connections": {
+    "Every day at 6am": {
+      "main": [[{ "node": "Sync all merchants", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "pinData": {},
+  "meta": {
+    "description": "Pulls the latest Paytm settlements for every Hisaab merchant each morning and refreshes their GSTR-3B draft. Set n8n environment variables HISAAB_URL (your Cloud Run URL) and HISAAB_AUTOMATION_TOKEN (matches AUTOMATION_TOKEN in the app)."
+  }
+}

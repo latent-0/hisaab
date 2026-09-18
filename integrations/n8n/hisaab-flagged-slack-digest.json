@@ -1,0 +1,97 @@
+{
+  "name": "Hisaab — Flagged Invoices Slack Digest",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "triggerAtHour": 20,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "trigger-evening",
+      "name": "Every day at 8pm",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.HISAAB_URL }}/api/automation/flagged",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.HISAAB_AUTOMATION_TOKEN }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-flagged",
+      "name": "Fetch flagged invoices",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.flaggedCount }}",
+              "rightValue": 0,
+              "operator": { "type": "number", "operation": "gt" }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "if-any",
+      "name": "Any flagged?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"text\": {{ JSON.stringify($json.slackText) }} }",
+        "options": {}
+      },
+      "id": "post-slack",
+      "name": "Post digest to Slack",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [980, 220]
+    }
+  ],
+  "connections": {
+    "Every day at 8pm": {
+      "main": [[{ "node": "Fetch flagged invoices", "type": "main", "index": 0 }]]
+    },
+    "Fetch flagged invoices": {
+      "main": [[{ "node": "Any flagged?", "type": "main", "index": 0 }]]
+    },
+    "Any flagged?": {
+      "main": [[{ "node": "Post digest to Slack", "type": "main", "index": 0 }], []]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "pinData": {},
+  "meta": {
+    "description": "Each evening, posts a Slack digest of every invoice flagged for review across all merchants (with ITC at stake), using the app's pre-formatted slackText. Env vars: HISAAB_URL, HISAAB_AUTOMATION_TOKEN, SLACK_WEBHOOK_URL."
+  }
+}
