@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Space Grotesk", var(--font-sans);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer base {
+  body {
+    @apply bg-surface-muted font-sans text-ink antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  /* All headings use the display face with tightened tracking. Weight is set
+     per-use: thin/light for large display, medium for small section titles. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tight;
+  }
+  /* Tabular figures everywhere numbers matter. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+  ::selection {
+    background: theme("colors.brand.500");
+    color: white;
+  }
+}
+
+/* Thin, unobtrusive scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-surface-border bg-surface shadow-card;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium tracking-tight transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400/60 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white shadow-sm hover:bg-brand-700 hover:shadow-md active:bg-brand-800;
+  }
+  .btn-ghost {
+    @apply btn border border-surface-border bg-surface text-ink-soft hover:border-slate-300 hover:bg-surface-muted;
+  }
+  .btn-subtle {
+    @apply btn bg-brand-50 text-brand-700 hover:bg-brand-100;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+  .input {
+    @apply w-full rounded-xl border border-surface-border bg-white px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-ink-muted focus:border-brand-400 focus:ring-2 focus:ring-brand-100;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-medium uppercase tracking-wide text-ink-muted;
+  }
+  /* Large display heading helper: thin + tight. */
+  .display-hero {
+    @apply font-display font-light tracking-tightest;
+  }
+  .display-title {
+    @apply font-display font-light tracking-tight;
+  }
+}
