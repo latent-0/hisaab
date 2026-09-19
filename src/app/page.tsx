@@ -21,6 +21,7 @@ import {
   ScanLine,
   Shield,
   Smartphone,
+  User,
   Store,
   TrainFront,
   Umbrella,
@@ -48,23 +49,29 @@ export default function PaytmV2() {
       <header className="sticky top-0 z-40 border-b border-black/5 bg-white">
         <div className="mx-auto flex max-w-[1180px] items-center gap-4 px-4 py-3">
           <Wordmark />
-          <nav className="mx-auto hidden items-center gap-6 lg:flex">
+          <nav className="hidden flex-1 items-center justify-center gap-4 lg:flex">
             {NAV.map((n) => (
-              <button key={n} onClick={demo} className="flex items-center gap-1 text-sm font-bold text-[#1a2b4a] hover:text-[#002970]">
-                {n} <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+              <button
+                key={n}
+                onClick={demo}
+                className="flex shrink-0 items-center gap-1 whitespace-nowrap text-sm font-bold text-[#1a2b4a] hover:text-[#002970]"
+              >
+                {n} <ChevronDown className="h-3.5 w-3.5 shrink-0 opacity-60" />
               </button>
             ))}
           </nav>
-          <div className="ml-auto flex items-center gap-4 lg:ml-0">
-            <button onClick={demo} className="hidden items-center gap-1.5 text-sm font-bold text-[#1a2b4a] sm:flex">
+          <div className="ml-auto flex shrink-0 items-center gap-4">
+            <button onClick={demo} className="hidden items-center gap-1.5 whitespace-nowrap text-sm font-bold text-[#1a2b4a] xl:flex">
               <Download className="h-4 w-4" /> Download App
             </button>
             <button
               onClick={demo}
-              className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold text-white shadow-sm"
+              className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold text-white shadow-sm"
               style={{ background: NAVY }}
             >
-              <span className="grid h-5 w-5 place-items-center rounded-full bg-white/25 text-[11px]">👤</span>
+              <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-white/25">
+                <User className="h-3 w-3" strokeWidth={2.5} />
+              </span>
               Sign In
             </button>
           </div>
