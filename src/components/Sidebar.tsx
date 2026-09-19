@@ -8,6 +8,8 @@ import {
   BarChart3,
   Banknote,
   CalendarClock,
+  Check,
+  ChevronsUpDown,
   FileCheck2,
   GaugeCircle,
   LayoutDashboard,
@@ -38,19 +40,43 @@ const NAV = [
 
 export function Sidebar({
   merchant,
+  merchants,
   openReviews,
 }: {
-  merchant: { businessName: string; ownerName: string; gstin: string; planTier: string };
+  merchant: { id: string; businessName: string; ownerName: string; gstin: string; planTier: string };
+  merchants: { id: string; businessName: string; gstin: string }[];
   openReviews: number;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [switcherOpen, setSwitcherOpen] = useState(false);
+  const [switchingId, setSwitchingId] = useState<string | null>(null);
 
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
     router.refresh();
+  }
+
+  async function switchAccount(merchantId: string) {
+    if (merchantId === merchant.id) {
+      setSwitcherOpen(false);
+      return;
+    }
+    setSwitchingId(merchantId);
+    try {
+      await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ merchantId }),
+      });
+      setSwitcherOpen(false);
+      router.push("/dashboard");
+      router.refresh();
+    } finally {
+      setSwitchingId(null);
+    }
   }
 
   const content = (
@@ -87,16 +113,48 @@ export function Sidebar({
         })}
       </nav>
 
-      <div className="border-t border-surface-border p-3">
-        <div className="flex items-center gap-3 rounded-xl px-3 py-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-white">
+      <div className="relative border-t border-surface-border p-3">
+        {switcherOpen && (
+          <>
+            <div className="fixed inset-0 z-10" onClick={() => setSwitcherOpen(false)} />
+            <div className="absolute bottom-full left-3 right-3 z-20 mb-2 max-h-72 overflow-y-auto rounded-xl border border-surface-border bg-surface p-1.5 shadow-pop">
+              <p className="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
+                Switch account
+              </p>
+              {merchants.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => switchAccount(m.id)}
+                  disabled={switchingId !== null}
+                  className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition hover:bg-surface-muted disabled:opacity-60"
+                >
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-semibold text-white">
+                    {m.businessName.slice(0, 1)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium text-ink">{m.businessName}</p>
+                    <p className="truncate text-[11px] text-ink-muted">{m.gstin}</p>
+                  </div>
+                  {m.id === merchant.id && <Check className="h-4 w-4 shrink-0 text-brand-600" />}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        <button
+          onClick={() => setSwitcherOpen((v) => !v)}
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition hover:bg-surface-muted"
+        >
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink text-sm font-semibold text-white">
             {merchant.businessName.slice(0, 1)}
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold text-ink">{merchant.businessName}</p>
             <p className="truncate text-[11px] text-ink-muted">{merchant.gstin}</p>
           </div>
-        </div>
+          <ChevronsUpDown className="h-4 w-4 shrink-0 text-ink-muted" />
+        </button>
         <button
           onClick={logout}
           className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-soft transition hover:bg-surface-muted"

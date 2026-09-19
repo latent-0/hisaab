@@ -33,7 +33,32 @@ interface Turn {
   text: string;
 }
 
-export function VoiceWidget({ language, useSarvam = false }: { language: string; useSarvam?: boolean }) {
+type VoiceProvider = "elevenlabs" | "sarvam" | "browser";
+
+const VOICE_LABEL: Record<VoiceProvider, string> = {
+  elevenlabs: "ElevenLabs voice",
+  sarvam: "Sarvam voice",
+  browser: "",
+};
+
+const AUDIO_MIME: Record<string, string> = {
+  mp3: "audio/mpeg",
+  wav: "audio/wav",
+};
+
+export function VoiceWidget({
+  language,
+  useSarvamStt = false,
+  voiceProvider = "browser",
+}: {
+  language: string;
+  /** Whether the mic button records audio for server-side (Sarvam) transcription. */
+  useSarvamStt?: boolean;
+  /** Which server TTS backend answers are spoken with; "browser" skips the server call. */
+  voiceProvider?: VoiceProvider;
+}) {
+  const useServerTts = voiceProvider !== "browser";
+  const useSarvam = useSarvamStt; // mic-recording path still needs Sarvam STT specifically
   const [open, setOpen] = useState(false);
   const [listening, setListening] = useState(false);
   const [thinking, setThinking] = useState(false);
@@ -63,9 +88,9 @@ export function VoiceWidget({ language, useSarvam = false }: { language: string;
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [turns, thinking]);
 
-  // ---- Output: Sarvam TTS with browser fallback ----
+  // ---- Output: ElevenLabs v3 (expressive) → Sarvam → browser TTS ----
   async function speak(text: string) {
-    if (useSarvam) {
+    if (useServerTts) {
       try {
         setSpeaking(true);
         const res = await fetch("/api/voice/speak", {
@@ -75,8 +100,9 @@ export function VoiceWidget({ language, useSarvam = false }: { language: string;
         });
         const data = await res.json();
         if (data.audio) {
+          const mime = AUDIO_MIME[data.format] ?? "audio/wav";
           audioRef.current?.pause();
-          const audio = new Audio(`data:audio/wav;base64,${data.audio}`);
+          const audio = new Audio(`data:${mime};base64,${data.audio}`);
           audioRef.current = audio;
           audio.onended = () => setSpeaking(false);
           await audio.play();
@@ -85,7 +111,7 @@ export function VoiceWidget({ language, useSarvam = false }: { language: string;
       } catch {
         /* fall through to browser TTS */
       } finally {
-        // if Sarvam produced audio, onended clears speaking; otherwise clear now
+        // if the server produced audio, onended clears speaking; otherwise clear now
       }
     }
     setSpeaking(false);
@@ -201,9 +227,9 @@ export function VoiceWidget({ language, useSarvam = false }: { language: string;
             <div className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-brand-300" />
               <span className="text-sm font-semibold">Ask Hisaab</span>
-              {useSarvam && (
+              {VOICE_LABEL[voiceProvider] && (
                 <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium text-white/70">
-                  Sarvam voice
+                  {VOICE_LABEL[voiceProvider]}
                 </span>
               )}
             </div>
